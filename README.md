@@ -9,7 +9,7 @@
 ## API
 
 - All API endpoints should start with `/api/`
-- All API endpoints should be designed in insomia and exported to a yaml file for documentation
+- All API endpoints should be designed in insomia (or postman idc. haven't figured out all the details yet) and exported to a yaml file for documentation
   - [See Insomnia docs](https://docs.insomnia.rest/insomnia/get-started-with-documents)
 - All API views should have a tests
   - [See DRF docs](https://www.django-rest-framework.org/api-guide/testing/)
