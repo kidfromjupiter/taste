@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { animated, useSpring, config } from "@react-spring/web";
 
@@ -55,16 +56,19 @@ const OrderStatusSVG = ({ stops }: Props) => {
 		}),
 		[stops]
 	);
+	console.log(measurements);
 
 	if (measurements.height !== 0 && measurements.width !== 0) {
 		return (
-			<div ref={svgHolderRef} className="w-full h-full">
+			<div ref={svgHolderRef} className="h-full w-full overflow-visible">
 				<svg height="100%" width="100%">
 					{stops.map((stop, i) => {
 						const numStops = stops.length;
+						const y = (i * measurements.height + 100) / numStops;
 
-						const y = (i * (measurements.y + measurements.height)) / numStops;
 						const x = measurements.width / 2;
+						const nextStopY = ((i + 1) * measurements.height + 100) / numStops;
+
 						const nextStop = i !== numStops - 1 ? stops[i + 1] : null;
 						const pulseLine =
 							stop.colored && nextStop && !nextStop.colored
@@ -89,9 +93,6 @@ const OrderStatusSVG = ({ stops }: Props) => {
 							});
 						}
 						if (i !== numStops - 1) {
-							const lineHeight =
-								((i + 1) * measurements.height) / numStops -
-								(i * measurements.height) / numStops;
 							return (
 								<>
 									{stop.pulseColor && stop.colored ? (
@@ -100,13 +101,11 @@ const OrderStatusSVG = ({ stops }: Props) => {
 											cx={x}
 											cy={y}
 											fill={stop.pulseColor}
-											key={i}
 										></animated.circle>
 									) : null}
 
 									<animated.path
-										height={lineHeight}
-										d={`M${x} ${y} L${x} ${lineHeight + y}`}
+										d={`M${x} ${y + 20} L${x} ${nextStopY - 20}`}
 										style={
 											pulseLine
 												? pulseLineStyle
@@ -116,7 +115,7 @@ const OrderStatusSVG = ({ stops }: Props) => {
 															: stop.secondaryColor,
 												  }
 										}
-										strokeDasharray={pulseLine || !stop.colored ? "10 12" : 0}
+										strokeDasharray={pulseLine ? "10 12" : 0}
 										strokeWidth={5}
 										strokeLinecap="round"
 									></animated.path>
@@ -140,7 +139,6 @@ const OrderStatusSVG = ({ stops }: Props) => {
 										cx={x}
 										cy={y}
 										fill={stop.pulseColor}
-										key={i}
 									></animated.circle>
 								) : null}
 								<circle
@@ -148,7 +146,6 @@ const OrderStatusSVG = ({ stops }: Props) => {
 									cy={y}
 									r={10}
 									fill={stop.colored ? stop.primaryColor : stop.secondaryColor}
-									key={i}
 								></circle>
 							</>
 						);

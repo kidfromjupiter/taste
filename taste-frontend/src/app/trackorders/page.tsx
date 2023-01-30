@@ -8,12 +8,22 @@ type Props = {
 
 const TrackOrder = ({ stops = 3 }: Props) => {
 	return (
-		<div className="flex h-screen">
-			<div className="flex flex-row">
-				<div>
-					<div></div>
+		<div className="flex h-screen flex-col px-3 py-4  w-full">
+			<div className="w-full">
+				<h3 className="text-4xl font-bold mb-3 ">Track Order</h3>
+				<div className="flex flex-row items-center w-full justify-between my-2">
+					<div className=" text-gray-500 font-semibold ">
+						<div>Wed, 12th September</div>
+						<div>Order ID: 90ejiff90322</div>
+					</div>
+					<div className="text-2xl">345Rs</div>
 				</div>
-				<div className="">
+			</div>
+			<div className="flex flex-col font-semibold mt-4">
+				<div className="text-gray-600 text-2xl mb-5">
+					<h3>ETA: Thu, 20th September</h3>
+				</div>
+				<div className="flex h-full overflow-visible">
 					<OrderStatusSVG
 						stops={[
 							{
@@ -43,6 +53,12 @@ const TrackOrder = ({ stops = 3 }: Props) => {
 							},
 						]}
 					/>
+					<div>
+						<div className="h-32 pl-5 pr-24">Packaging complete</div>
+						<div className="h-32 pl-5 pr-24">Packaging complete</div>
+						<div className="h-32 pl-5 pr-24">Packaging complete</div>
+						<div className="h-32 pl-5 pr-24">Packaging complete</div>
+					</div>
 				</div>
 			</div>
 		</div>

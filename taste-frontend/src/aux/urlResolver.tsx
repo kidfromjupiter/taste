@@ -25,7 +25,7 @@ export const urls: Record<string, sidebarMeta> = {
 		icon: <BsBoxSeam size={25} />,
 	},
 	"/trackorders": {
-		title: "Track Orders",
+		title: "Orders",
 		icon: <TbTruckDelivery size={25} />,
 	},
 };
