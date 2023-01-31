@@ -51,7 +51,7 @@ const OrderStatusSVG = ({ stops }: Props) => {
 				stroke: "#7f1d1d",
 				strokeDashoffset: 0,
 			},
-			loop: true,
+			loop: { reverse: true },
 			config: config.molasses,
 		}),
 		[stops]

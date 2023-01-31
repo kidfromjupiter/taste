@@ -2,7 +2,13 @@
 import OrderStatusSVG from "@/components/OrderStatusSVG";
 import React, { useRef, useState, useLayoutEffect } from "react";
 import { TfiPackage } from "react-icons/tfi";
-import { TbChartArcs, TbGridDots, TbTruckDelivery } from "react-icons/tb";
+import {
+	TbChartArcs,
+	TbGridDots,
+	TbTruckDelivery,
+	TbHome,
+} from "react-icons/tb";
+import { BsChevronBarUp } from "react-icons/bs";
 import SpringCard from "@/components/SpringCard";
 
 type Props = {
@@ -11,6 +17,7 @@ type Props = {
 
 const TrackOrder = ({ stops = 3 }: Props) => {
 	const [shown, setShown] = useState(false);
+
 	return (
 		<>
 			<div className="flex flex-col px-3 py-4  w-full">
@@ -116,12 +123,28 @@ const TrackOrder = ({ stops = 3 }: Props) => {
 						</div>
 					</div>
 				</div>
-			</div>
-			<div
-				className="bg-slate-900 p-5 text-white"
-				onClick={() => setShown(!shown)}
-			>
-				click to expand
+				<div className="flex flex-row items-center mb-5">
+					<div className="m-4 mr-6 text-6xl">
+						<TbHome />
+					</div>
+					<div>
+						<div className="font-semibold text-lg">Delivery Address</div>
+						<div className="text-gray-400 font-regular text-md">
+							No 1, 2nd Street, 3rd Avenue, 4th Block, 5th Ward, 6th
+						</div>
+					</div>
+				</div>
+				<div
+					className="flex flex-row items-center justify-between text-lg"
+					onClick={() => setShown(!shown)}
+				>
+					<div>
+						<div className="">See items</div>
+					</div>
+					<div className="text-2xl animate-bounce">
+						<BsChevronBarUp />
+					</div>
+				</div>
 			</div>
 			<SpringCard
 				show={shown}

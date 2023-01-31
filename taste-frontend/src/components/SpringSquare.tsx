@@ -69,8 +69,8 @@ const SpringContainer: React.FunctionComponent<SpringContainerProps> = ({
 				hoverEndCallback?.();
 				api.start({ ...defaultValue });
 			}}
-			onTouchMove={() => {
-				api.start({ ...defaultValue, immediate: true });
+			onTouchMove={(e) => {
+				api.start({ ...defaultValue });
 			}}
 			onMouseEnter={() => {
 				if (enableHover) {

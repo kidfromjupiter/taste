@@ -53,8 +53,6 @@ export default function SideBar() {
 		}
 		return links;
 	};
-	console.log("loaded into view");
-
 	useEffect(() => {
 		const links = renderLinks();
 		setSidebarLinks(links);
