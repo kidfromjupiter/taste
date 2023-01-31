@@ -82,7 +82,7 @@ export default function SideBar() {
 						},
 					}}
 				>
-					<MenuItem
+					{/* <MenuItem
 						className="mt-10"
 						icon={
 							<div
@@ -105,7 +105,7 @@ export default function SideBar() {
 								<BsBoxArrowLeft size={28} />
 							</div>
 						</div>
-					</MenuItem>
+					</MenuItem> */}
 				</Menu>
 				<Menu
 					className="bg-emerald-700 pb-5"
@@ -115,7 +115,7 @@ export default function SideBar() {
 							if (level === 0)
 								return {
 									backgroundColor: active ? "#059669" : undefined,
-									borderRadius: "0.5rem",
+									// borderRadius: "0.5rem",
 									boxShadow: active ? "0 4px 17px 0.1rem #05A875" : "initial",
 									"&:hover": {
 										backgroundColor: active ? "#059669" : "unset",
