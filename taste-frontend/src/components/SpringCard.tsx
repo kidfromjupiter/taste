@@ -28,7 +28,7 @@ const SpringCard = ({ show = false, hideCallback, title }: Props) => {
 			<>
 				<animated.div
 					style={springStyles}
-					className=" shadow-top bg-gray-100 absolute w-full top-1/3 h-2/3 overflow-hidden  z-50 pt-5"
+					className=" shadow-top bg-gray-100 absolute w-full top-1/2 h-2/3 pb-10 overflow-hidden  z-50 pt-3"
 				>
 					<div className="flex items-center justify-center relative p-3">
 						<div>
@@ -45,7 +45,7 @@ const SpringCard = ({ show = false, hideCallback, title }: Props) => {
 					</div>
 				</animated.div>
 				<animated.div
-					className="top-0 right-0 h-screen w-screen bg-black bg-opacity-60 absolute z-10"
+					className="bottom-0 right-0 h-screen w-screen bg-black bg-opacity-60 absolute z-10"
 					style={overlayStyles}
 					onClick={() => {
 						springApi.start({

@@ -31,7 +31,7 @@ const TrackOrder = ({ stops = 3 }: Props) => {
 						<div className="text-2xl">345Rs</div>
 					</div>
 				</div>
-				<div className="flex flex-col font-semibold mt-4">
+				<div className="flex flex-col font-semibold mt-4 border-b-2 border-b-slate-100">
 					<div className="text-gray-600 text-2xl mb-10">
 						<h3>ETA: Thu, 20th September</h3>
 					</div>
@@ -123,7 +123,7 @@ const TrackOrder = ({ stops = 3 }: Props) => {
 						</div>
 					</div>
 				</div>
-				<div className="flex flex-row items-center mb-5">
+				<div className="flex flex-row items-center mb-5 border-b-2 border-b-slate-100">
 					<div className="m-4 mr-6 text-6xl">
 						<TbHome />
 					</div>
@@ -139,7 +139,7 @@ const TrackOrder = ({ stops = 3 }: Props) => {
 					onClick={() => setShown(!shown)}
 				>
 					<div>
-						<div className="">See items</div>
+						<div className="font-semibold text-gray-600">See items</div>
 					</div>
 					<div className="text-2xl animate-bounce">
 						<BsChevronBarUp />
