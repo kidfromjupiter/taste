@@ -56,7 +56,6 @@ const OrderStatusSVG = ({ stops }: Props) => {
 		}),
 		[stops]
 	);
-	console.log(measurements);
 
 	if (measurements.height !== 0 && measurements.width !== 0) {
 		return (
