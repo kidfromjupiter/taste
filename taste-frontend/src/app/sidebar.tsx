@@ -70,7 +70,7 @@ export default function SideBar() {
 				defaultCollapsed={false}
 			>
 				<Menu
-					className="mb-5 bg-emerald-700 "
+					className=" bg-emerald-700 hidden md:block"
 					menuItemStyles={{
 						button: ({ level, active, disabled }) => {
 							if (level === 0)
@@ -82,8 +82,8 @@ export default function SideBar() {
 						},
 					}}
 				>
-					{/* <MenuItem
-						className="mt-10"
+					<MenuItem
+						className="mt-10 "
 						icon={
 							<div
 								className="bg-cover bg-center rounded-full drop-shadow-xl p"
@@ -105,10 +105,10 @@ export default function SideBar() {
 								<BsBoxArrowLeft size={28} />
 							</div>
 						</div>
-					</MenuItem> */}
+					</MenuItem>
 				</Menu>
 				<Menu
-					className="bg-emerald-700 pb-5"
+					className="bg-emerald-700 pb-5 mt-5"
 					closeOnClick={true}
 					menuItemStyles={{
 						button: ({ level, active, disabled }) => {
