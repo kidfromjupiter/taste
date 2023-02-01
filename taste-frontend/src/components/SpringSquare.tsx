@@ -18,7 +18,7 @@ interface SpringContainerProps {
 	touchStart?: ControllerUpdate;
 	mouseEnter?: ControllerUpdate;
 	defaultValue?: ControllerUpdate;
-	touchEndCallback?: () => void;
+	touchEndCallback?: (e: React.MouseEvent<HTMLDivElement>) => void;
 	hoverCallback?: () => void;
 	hoverEndCallback?: () => void;
 	enableHover?: boolean;
@@ -79,7 +79,7 @@ const SpringContainer: React.FunctionComponent<SpringContainerProps> = ({
 				}
 			}}
 			style={styles}
-			onClick={() => touchEndCallback?.()}
+			onClick={(e) => touchEndCallback?.(e)}
 			// style={[...styles, { backgroundColor: color }]}
 		>
 			<div

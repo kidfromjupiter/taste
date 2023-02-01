@@ -33,7 +33,6 @@ const SpringCard = ({ show = false, hideCallback, title }: Props) => {
 					<div className="flex items-center justify-center relative p-3">
 						<div>
 							<h3 className="font-semibold text-xl">{title}</h3>
-							{/* <BsChevronBarDown className=" absolute top-3 right-3 text-4xl text-gray-400" /> */}
 						</div>
 					</div>
 					<div className="h-full w-full overflow-auto">

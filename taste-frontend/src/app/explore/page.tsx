@@ -10,6 +10,7 @@ import React, {
 	useEffect,
 } from "react";
 import { useSpring, animated } from "@react-spring/web";
+import FramerWrapper from "@/components/FramerWrapper";
 
 type Props = {};
 
@@ -84,23 +85,25 @@ const ExplorePage = (props: Props) => {
 	}, []);
 
 	return (
-		<div className="h-screen relative">
-			<animated.div
-				style={style}
-				className=" absolute z-10 flex w-full px-3 bg-white py-5 shadow-md"
-				ref={ref}
-			>
-				<SearchBar className=" bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3" />
-			</animated.div>
-			<div
-				className="w-full grid-flow-row grid-cols-2 grid gap-3 px-3 pb-10 pt-24 h-full overflow-auto"
-				onScroll={onScroll}
-			>
-				{Array.from({ length: 40 }).map((_, i) => {
-					return <ProductCard key={i} />;
-				})}
+		<FramerWrapper>
+			<div className="h-screen relative">
+				<animated.div
+					style={style}
+					className=" absolute z-10 flex w-full px-3 bg-white py-5 shadow-md"
+					ref={ref}
+				>
+					<SearchBar className=" bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3" />
+				</animated.div>
+				<div
+					className="w-full grid-flow-row grid-cols-2 grid gap-3 px-3 pb-10 pt-24 h-full overflow-auto"
+					onScroll={onScroll}
+				>
+					{Array.from({ length: 40 }).map((_, i) => {
+						return <ProductCard key={i} />;
+					})}
+				</div>
 			</div>
-		</div>
+		</FramerWrapper>
 	);
 };
 export default ExplorePage;

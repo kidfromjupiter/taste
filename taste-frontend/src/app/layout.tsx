@@ -1,5 +1,5 @@
 "use client";
-
+import { AnimatePresence, motion } from "framer-motion";
 import "@/styles/globals.css";
 import { Inter } from "@next/font/google";
 import { ProSidebarProvider } from "react-pro-sidebar";
@@ -17,7 +17,16 @@ export default function Layout({
 					<ProSidebarProvider>
 						<div className="flex-col md:flex-row flex ">
 							<SideBar />
-							<div className="w-full">{children}</div>
+
+							<div className="w-full">
+								<AnimatePresence
+									mode="wait"
+									initial={false}
+									onExitComplete={() => window.scrollTo(0, 0)}
+								>
+									{children}
+								</AnimatePresence>
+							</div>
 						</div>
 					</ProSidebarProvider>
 				</div>
