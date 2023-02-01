@@ -13,7 +13,7 @@ import Image from "next/image";
 import profile from "../../public/profile.jpeg";
 import Link from "next/link";
 import {} from "react";
-import { RxAvatar } from "react-icons/rx";
+import { FiChevronLeft } from "react-icons/fi";
 import { CgMenuLeft } from "react-icons/cg";
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
 export default function SideBar() {
@@ -21,24 +21,42 @@ export default function SideBar() {
 		useProSidebar();
 	const [sidebarLinks, setSidebarLinks] = useState<ReactNode[] | null>(null);
 	const [currentpathName, setCurrentpathName] = useState("");
+	const [backButtonShown, setBackButtonShown] = useState(false);
+	const router = useRouter();
 
 	const path = usePathname();
 
 	const renderLinks = () => {
 		let links: Array<ReactElement> = [];
+		let homeIndex: number = 0;
 		for (const key in urls) {
-			if (key == path) {
+			if (path !== null && path.includes(key)) {
 				setCurrentpathName(urls[key].title);
-				links.push(
-					<MenuItem
-						active
-						icon={urls[key].icon}
-						component={<Link href={key} />}
-						key={key}
-					>
-						{urls[key].title}
-					</MenuItem>
-				);
+				if (path.split("/").length > 2) {
+					setBackButtonShown(true);
+				}
+				if (key === "/") {
+					links.push(
+						<MenuItem
+							component={<Link href={key} />}
+							icon={urls[key].icon}
+							key={key}
+						>
+							{urls[key].title}
+						</MenuItem>
+					);
+				} else {
+					links.push(
+						<MenuItem
+							active
+							icon={urls[key].icon}
+							component={<Link href={key} />}
+							key={key}
+						>
+							{urls[key].title}
+						</MenuItem>
+					);
+				}
 			} else {
 				links.push(
 					<MenuItem
@@ -56,8 +74,8 @@ export default function SideBar() {
 	useEffect(() => {
 		const links = renderLinks();
 		setSidebarLinks(links);
-		console.log("ran");
 	}, [path]);
+
 	return (
 		<>
 			<Sidebar
@@ -154,8 +172,16 @@ export default function SideBar() {
 				</div> */}
 			</Sidebar>
 			<div className="py-3 px-2 md:hidden flex flex-row items-center  z-50 bg-white border-b-slate-100 border-b-2">
-				<div onClick={() => toggleSidebar()}>
-					<CgMenuLeft size={30} />
+				<div className="flex flex-row justify-center items-center">
+					{backButtonShown ? (
+						<div className="pr-2" onClick={() => router.back()}>
+							<FiChevronLeft size={28} />
+						</div>
+					) : null}
+
+					<div onClick={() => toggleSidebar()}>
+						<CgMenuLeft size={34} />
+					</div>
 				</div>
 				<div className="px-3 font-medium text-xl flex-1 text-center">
 					{currentpathName}
