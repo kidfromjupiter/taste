@@ -2,14 +2,8 @@
 
 import ProductCard from "@/components/ProductCard";
 import SearchBar from "@/components/SearchBar/SearchBar";
-import React, {
-	useRef,
-	useCallback,
-	UIEvent,
-	useState,
-	useEffect,
-} from "react";
-import { useSpring, animated } from "@react-spring/web";
+import React, { useRef, useState, useEffect } from "react";
+import { useSpring, animated, useSpringRef } from "@react-spring/web";
 import { BsArrowUp } from "react-icons/bs";
 import FramerWrapper from "@/components/FramerWrapper";
 import { AiOutlineLoading } from "react-icons/ai";
@@ -23,29 +17,70 @@ import {
 	useTransform,
 	useSpring as framerSpring,
 	AnimatePresence,
+	useTime,
+	useAnimationControls,
 } from "framer-motion";
 type Props = {};
 
 const ExplorePage = (props: Props) => {
 	const ref = useRef<HTMLDivElement>(null);
+
+	//detecting viewport entry of last list item
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const bottomIntersectionDiv = useRef<HTMLDivElement>(null);
+	useEffect(() => {
+		if (bottomIntersectionDiv.current) {
+			const observer = new IntersectionObserver(
+				([entry]) => {
+					if (entry.isIntersecting) {
+						setBottom(true);
+					}
+				},
+				{
+					root: scrollContainerRef.current,
+				}
+			);
+			observer.observe(bottomIntersectionDiv.current);
+		}
+	}, []);
+	const [loading, setLoading] = useState(false);
 	const [bottom, setBottom] = useState(false);
 	const [textShown, setTextShown] = useState(true);
 	const scrollYValue = useMotionValue(0);
 	const translateY = framerSpring(0, {
-		stiffness: 200,
+		stiffness: 300,
 		damping: 40,
 	});
+	//animating blobs
+	const borderRadiusBlobControls = useAnimationControls();
+	useEffect(() => {
+		borderRadiusBlobControls.start({
+			borderRadius: [
+				"33% 67% 70% 30% / 30% 30% 70% 70%",
+				"37% 63% 51% 49% / 37% 65% 35% 63%",
+				"36% 64% 64% 36% / 64% 48% 52% 36%",
+				"37% 63% 51% 49% / 30% 30% 70% 70%",
+				"40% 60% 42% 58% / 41% 51% 49% 59%",
+				"33% 67% 70% 30% / 30% 30% 70% 70%",
+			],
+			transform: ["rotateY(0deg)", "rotateY(10deg)"],
+
+			transition: {
+				duration: 30,
+				repeat: Infinity,
+				repeatType: "loop",
+				ease: "easeInOut",
+			},
+		});
+	}, []);
+
+	//drag to load more animations
 	const dragProgress = useMotionValue(0);
 	const animatedColor = useTransform(
 		dragProgress,
 		[0, -200, -250],
 		["#000000", "#059669", "#d97706"]
 	);
-
-	const [loading, setLoading] = useState(false);
-
 	const { scrollY } = useScroll({
 		container: scrollContainerRef,
 		axis: "y",
@@ -63,21 +98,6 @@ const ExplorePage = (props: Props) => {
 			}, 1000);
 		}
 	}, [loading]);
-	useEffect(() => {
-		if (bottomIntersectionDiv.current) {
-			const observer = new IntersectionObserver(
-				([entry]) => {
-					if (entry.isIntersecting) {
-						setBottom(true);
-					}
-				},
-				{
-					root: scrollContainerRef.current,
-				}
-			);
-			observer.observe(bottomIntersectionDiv.current);
-		}
-	}, []);
 
 	useMotionValueEvent(scrollY, "change", (latest) => {
 		if (scrollYValue.get() == 0) {
@@ -104,7 +124,7 @@ const ExplorePage = (props: Props) => {
 					style={{
 						translateY: useTransform(translateY, [0, 100], ["0%", "-100%"]),
 					}}
-					className=" absolute z-10 flex w-full px-3 bg-white py-5 shadow-md"
+					className=" absolute z-20 flex w-full px-3 bg-white py-5 shadow-md"
 					ref={ref}
 				>
 					<SearchBar className=" bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3" />
@@ -117,41 +137,45 @@ const ExplorePage = (props: Props) => {
 						if (i == 9) {
 							return (
 								<div key={i} ref={bottomIntersectionDiv}>
-									<ProductCard />
+									<ProductCard borderStyles={borderRadiusBlobControls} />
 								</div>
 							);
 						}
-						return <ProductCard key={i} />;
+						return (
+							<ProductCard key={i} borderStyles={borderRadiusBlobControls} />
+						);
 					})}
 				</m.div>
 			</m.div>
 			<AnimatePresence>
 				{bottom ? (
 					<motion.div
-						className="absolute bottom-0 right-0 px-16  touch-none text-white justify-center items-center w-full flex"
+						className="absolute bottom-0 right-0 px-16  touch-none text-white justify-center items-center w-full flex z-50"
 						onDrag={(event, info) => {
 							dragProgress.set(info.offset.y);
 							if (info.offset.y < -200) {
 								setLoading(true);
 							}
 						}}
-						style={{}}
 						onDragEnd={() => dragProgress.set(0)}
 						drag="y"
 						dragSnapToOrigin={true}
 						dragElastic={0.5}
 						dragConstraints={{ top: 0 }}
 						dragPropagation={true}
-						exit={{ opacity: 0, y: 100 }}
-						initial={{ opacity: 0, y: 100 }}
-						animate={{ opacity: 1, transition: { type: "spring" }, y: 0 }}
+						exit={{ opacity: 0, translateY: 100 }}
+						initial={{ opacity: 0, translateY: 100 }}
+						animate={{
+							opacity: 1,
+							transition: { duration: 0.5 },
+							translateY: 0,
+						}}
 					>
 						<motion.div
 							style={{
 								backgroundColor: animatedColor,
 							}}
-							layout={true}
-							className=" flex p-3 rounded-full items-center"
+							className=" flex p-3 items-center"
 						>
 							<AnimatePresence>
 								{textShown ? (

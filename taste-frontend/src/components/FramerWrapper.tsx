@@ -1,6 +1,6 @@
-import { LazyMotion, m, domAnimation } from "framer-motion";
+import { LazyMotion, m, domAnimation, DragHandlers } from "framer-motion";
 import React from "react";
-
+import { FeatureBundle } from "framer-motion";
 type Props = {
 	children: React.ReactNode;
 };

@@ -3,9 +3,12 @@ import SpringContainer from "./SpringSquare";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { HiOutlinePlus, HiOutlineMinus } from "react-icons/hi";
 import { BsCart } from "react-icons/bs";
-type Props = {};
+import { AnimationControls, m, MotionStyle } from "framer-motion";
+type Props = {
+	borderStyles: AnimationControls;
+};
 
-const ProductCard = (props: Props) => {
+const ProductCard = ({ borderStyles }: Props) => {
 	return (
 		<div className="flex relative select-none lg:cursor-pointer rounded-md bg-gray-50 border-slate-100 border-2 shadow-md shadow-gray-100 flex-col justify-center items-center">
 			<div className="absolute top-2 right-2">
@@ -14,10 +17,17 @@ const ProductCard = (props: Props) => {
 					1
 				</div>
 			</div>
-			<div
-				style={{ backgroundImage: `url(${"/spicebottle.png"})` }}
-				className=" h-28 w-28 bg-cover bg-center my-6"
-			></div>
+			<div className="relative flex justify-center items-center">
+				<div
+					style={{ backgroundImage: `url(${"/spicebottle.png"})` }}
+					className=" h-28 w-28 bg-cover bg-center my-6 z-10"
+				></div>
+				<m.span
+					animate={borderStyles}
+					// style={{ 	borderaRadius: "30% 70% 70% 30% / 30% 52% 48% 70%" }}
+					className="w-36 h-36 m-auto bg-slate-100 absolute"
+				></m.span>
+			</div>
 			<div>
 				<div className="font-medium text-lg">Turmeric Powder</div>
 				<div className=" font-light">780Rs</div>
