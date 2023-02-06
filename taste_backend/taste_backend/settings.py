@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'apps.custom_auth',
+    'apps.cart',
+    'apps.products',
+    'djmoney'
     # 'dj-rest-auth',
     # 'djangorestframework_simplejwt',
 
