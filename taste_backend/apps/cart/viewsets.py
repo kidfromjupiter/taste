@@ -45,4 +45,16 @@ class CartViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
         cartItem.decrease_quantity(request.data['quantity'] if 'quantity' in request.data else 1)
+        if cartItem.id == None:
+            return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_200_OK,data=CartItemSerializer(cartItem).data)
+    
+    @action(detail=False,methods=['delete']) 
+    def removefromcart(self,request,*args,**kwargs):
+        # removing cart item from cart
+        cartItem = CartItem.objects.get(pk=request.data['cartItem'])
+        if cartItem.cart.user.pk != request.data['user']:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+        cartItem.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

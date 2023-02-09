@@ -19,7 +19,7 @@ class CartItem(models.Model):
         """Reduce quantity of product in cart"""
 
         if self.quantity - quantity <= 0:
-            self.removefromcart()
+            self.delete()
         else:
         # increasing product stock
             self.quantity -= quantity

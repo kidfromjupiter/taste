@@ -105,3 +105,29 @@ class CartTestCase(APITestCase,TestCase):
         self.assertEqual(response.status_code,200)
         self.assertEqual(CartItem.objects.get(pk=response.data['id']).quantity,10)
         self.assertEqual(Product.objects.get(pk=self.product2.pk).stock,self.product2.stock-10)
+    
+    def test_decreasequantity_with_invalid_quantity(self):
+        #product stock should increase to original value
+
+        # adding to cart
+        cartResponse = self.client.post(f'/api/cart/addtocart/',{'product':self.product2.pk,'quantity':20,'user':self.user.pk},format='json')
+        self.assertEqual(cartResponse.status_code,200)
+        self.assertEqual(Product.objects.get(pk=self.product2.pk).stock,self.product2.stock - 20)
+        self.assertEqual(cartResponse.data['quantity'],20)
+
+        #decreasing quantity
+        response = self.client.post(f'/api/cart/decreasequantity/',{'cartItem':cartResponse.data['id'],'quantity':1000,'user':self.user.pk},format='json')
+        self.assertEqual(response.status_code,204)
+        self.assertEqual(self.product2.stock,Product.objects.get(pk=self.product2.pk).stock)
+    
+    def test_removefromcart(self):
+        # adding to cart
+        cartResponse = self.client.post(f'/api/cart/addtocart/',{'product':self.product2.pk,'quantity':20,'user':self.user.pk},format='json')
+        self.assertEqual(cartResponse.status_code,200)
+        self.assertEqual(Product.objects.get(pk=self.product2.pk).stock,self.product2.stock - 20)
+        self.assertEqual(cartResponse.data['quantity'],20)
+
+        #removing from cart
+        response = self.client.delete(f'/api/cart/removefromcart/',{'cartItem':cartResponse.data['id'],'user':self.user.pk},format='json')
+        self.assertEqual(response.status_code,204)
+        self.assertEqual(self.product2.stock,Product.objects.get(pk=self.product2.pk).stock)
