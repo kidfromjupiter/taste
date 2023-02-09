@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser,BaseUserManager
+from .countriesField import CountryField
 
 class UserManager(BaseUserManager):
     """ Manager for custom user profiles"""
@@ -37,3 +38,18 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['first_name']
     def __str__(self):
         return self.username
+
+class Address(models.Model):
+    """ Model for user addresses """
+
+    user = models.ForeignKey("custom_auth.User", on_delete=models.PROTECT)
+    addressLine1 = models.CharField(max_length=254)
+    addressLine2 = models.CharField(max_length=254)
+    city = models.CharField(max_length=254)
+    country = CountryField()
+    postal_code = models.CharField(max_length=254)
+    phone = models.CharField(max_length=254)
+    domestic = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.user} Address"

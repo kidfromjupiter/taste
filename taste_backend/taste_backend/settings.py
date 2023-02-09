@@ -42,10 +42,8 @@ INSTALLED_APPS = [
     'apps.custom_auth',
     'apps.cart',
     'apps.products',
-    'djmoney'
-    # 'dj-rest-auth',
-    # 'djangorestframework_simplejwt',
-
+    'apps.tracking',
+    'djmoney',
 ]
 
 MIDDLEWARE = [
