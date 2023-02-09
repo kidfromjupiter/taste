@@ -15,8 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from apps.products.routers import urlpatterns as products_urls
+from apps.cart.routers import urlpatterns as cart_urls
+
+routerUrls = products_urls + cart_urls
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('dj_rest_auth.urls'))
-]
+    path('auth/', include('dj_rest_auth.urls')),
+    path('api/',include(routerUrls))
+]   
