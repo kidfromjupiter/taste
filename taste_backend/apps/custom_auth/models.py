@@ -30,6 +30,7 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     """ Custom user model that supports using email instead of username """
     email =models.EmailField( max_length=254,unique=True)
+    uid = models.CharField(max_length=254,unique=True,primary_key=True)
     first_name = models.CharField(max_length=254)
     last_name = models.CharField(max_length=254)
     objects = UserManager()
