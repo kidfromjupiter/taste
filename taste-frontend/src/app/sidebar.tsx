@@ -11,17 +11,20 @@ import { usePathname, useRouter } from "next/navigation";
 import { BsBoxArrowLeft } from "react-icons/bs";
 import Image from "next/image";
 import profile from "../../public/profile.jpeg";
+import { AiOutlineUser } from "react-icons/ai";
 import Link from "next/link";
 import {} from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { CgMenuLeft } from "react-icons/cg";
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
+import { AnimatePresence, motion } from "framer-motion";
 export default function SideBar() {
 	const { collapseSidebar, toggleSidebar, collapsed, toggled, broken, rtl } =
 		useProSidebar();
 	const [sidebarLinks, setSidebarLinks] = useState<ReactNode[] | null>(null);
 	const [currentpathName, setCurrentpathName] = useState("");
 	const [backButtonShown, setBackButtonShown] = useState(false);
+	const [prefOpen, setPrefOpen] = useState(false);
 	const router = useRouter();
 
 	const path = usePathname();
@@ -77,7 +80,7 @@ export default function SideBar() {
 	}, [path]);
 
 	return (
-		<>
+		<div className="relative">
 			<Sidebar
 				className=" text-gray-100  font-medium bg-emerald-700 relative "
 				width="300px"
@@ -186,7 +189,41 @@ export default function SideBar() {
 				<div className="px-3 font-medium text-xl flex-1 text-center">
 					{currentpathName}
 				</div>
+				<div className="px-3 " onClick={() => setPrefOpen(!prefOpen)}>
+					<AiOutlineUser size={34} />
+				</div>
 			</div>
-		</>
+			<AnimatePresence>
+				{prefOpen ? (
+					<div
+						className="h-screen w-full absolute top-16 right-0"
+						onClick={() => setPrefOpen(false)}
+					>
+						<motion.div
+							className=" bg-gray-100 shadow-lg rounded-lg absolute z-50 right-0 m-5 origin-top-right"
+							initial={{ opacity: 0, scale: 0 }}
+							animate={{
+								opacity: 1,
+								scale: 1,
+							}}
+							transition={{ type: "spring", stiffness: 500, damping: 30 }}
+							exit={{ opacity: 0, scale: 0 }}
+						>
+							<div className=" border-b-2 border-b-slate-200">
+								<div className="py-3 px-5 w-48">Account</div>
+								<div className="py-3 px-5 w-48">Preferences</div>
+								<div className="py-3 px-5 w-48">Logout</div>
+							</div>
+							<div>
+								<div className="py-3 px-5 w-48">Cart</div>
+								<div className="py-3 px-5 w-48">Grocery list</div>
+
+								<div className="py-3 px-5 w-48">Orders</div>
+							</div>
+						</motion.div>
+					</div>
+				) : null}
+			</AnimatePresence>
+		</div>
 	);
 }
