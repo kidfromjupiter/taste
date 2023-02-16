@@ -1,9 +1,8 @@
-import React, { useRef, useEffect, MouseEvent } from "react";
+import React from "react";
 import SpringContainer from "./SpringSquare";
-import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { HiOutlinePlus, HiOutlineMinus } from "react-icons/hi";
 import { BsCart } from "react-icons/bs";
-import { AnimationControls, m, MotionStyle } from "framer-motion";
+import { AnimationControls, m } from "framer-motion";
 type Props = {
 	borderStyles: AnimationControls;
 };
@@ -11,10 +10,10 @@ type Props = {
 const ProductCard = ({ borderStyles }: Props) => {
 	return (
 		<div className="flex relative select-none lg:cursor-pointer rounded-md bg-gray-50 border-slate-100 border-2 shadow-md shadow-gray-100 flex-col justify-center items-center">
-			<div className="absolute top-2 right-2">
+			<div className="absolute top-2 right-2 z-20">
 				<BsCart size={30} />
-				<div className="absolute top-0 right-0 rounded-full bg-emerald-800 text-white text-sm w-4 h-4 flex justify-center items-center">
-					1
+				<div className="absolute top-0 right-0 rounded-full bg-emerald-800 text-white text-sm flex justify-center items-center">
+					10
 				</div>
 			</div>
 			<div className="relative flex justify-center items-center">

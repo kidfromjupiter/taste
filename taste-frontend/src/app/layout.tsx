@@ -18,7 +18,7 @@ export default function Layout({
 						<div className="flex-col md:flex-row flex ">
 							<SideBar />
 
-							<div className="w-full">
+							<div className="w-full mt-16">
 								<AnimatePresence
 									mode="wait"
 									initial={false}

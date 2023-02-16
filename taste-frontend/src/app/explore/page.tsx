@@ -3,54 +3,23 @@
 import ProductCard from "@/components/ProductCard";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import React, { useRef, useState, useEffect } from "react";
-import { useSpring, animated, useSpringRef } from "@react-spring/web";
-import { BsArrowUp } from "react-icons/bs";
 import FramerWrapper from "@/components/FramerWrapper";
-import { AiOutlineLoading } from "react-icons/ai";
 import {
-	m,
-	motion,
-	useDragControls,
-	useScroll,
-	useMotionValueEvent,
-	useMotionValue,
-	useTransform,
-	useSpring as framerSpring,
-	AnimatePresence,
-	useTime,
-	useAnimationControls,
-} from "framer-motion";
+	AiOutlineLoading,
+	AiOutlineUnorderedList,
+	AiOutlineAppstore,
+} from "react-icons/ai";
+import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
+import ListProduct from "@/components/ListProduct";
+import SpringContainer from "@/components/SpringSquare";
 type Props = {};
 
 const ExplorePage = (props: Props) => {
 	const ref = useRef<HTMLDivElement>(null);
 
 	//detecting viewport entry of last list item
-	const scrollContainerRef = useRef<HTMLDivElement>(null);
-	const bottomIntersectionDiv = useRef<HTMLDivElement>(null);
-	useEffect(() => {
-		if (bottomIntersectionDiv.current) {
-			const observer = new IntersectionObserver(
-				([entry]) => {
-					if (entry.isIntersecting) {
-						setBottom(true);
-					}
-				},
-				{
-					root: scrollContainerRef.current,
-				}
-			);
-			observer.observe(bottomIntersectionDiv.current);
-		}
-	}, []);
+	const [listView, setListView] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [bottom, setBottom] = useState(false);
-	const [textShown, setTextShown] = useState(true);
-	const scrollYValue = useMotionValue(0);
-	const translateY = framerSpring(0, {
-		stiffness: 300,
-		damping: 40,
-	});
 	//animating blobs
 	const borderRadiusBlobControls = useAnimationControls();
 	useEffect(() => {
@@ -72,146 +41,93 @@ const ExplorePage = (props: Props) => {
 				ease: "easeInOut",
 			},
 		});
-	}, []);
+	}, [listView, borderRadiusBlobControls]);
 
 	//drag to load more animations
-	const dragProgress = useMotionValue(0);
-	const animatedColor = useTransform(
-		dragProgress,
-		[0, -200, -250],
-		["#000000", "#059669", "#d97706"]
-	);
-	const { scrollY } = useScroll({
-		container: scrollContainerRef,
-		axis: "y",
-	});
-	useMotionValueEvent(dragProgress, "change", (latest) => {
-		if (latest < -200) {
-			setTextShown(false);
-			setLoading(true);
-		}
-	});
 	useEffect(() => {
 		if (loading == true) {
 			setTimeout(() => {
 				setLoading(false);
-			}, 1000);
+			}, 3000);
 		}
 	}, [loading]);
 
-	useMotionValueEvent(scrollY, "change", (latest) => {
-		if (scrollYValue.get() == 0) {
-			scrollYValue.set(100);
-		}
-		if (latest > scrollYValue.get()) {
-			//SCROLLING DOWN
-			translateY.set(100);
-		} else {
-			//SCROLLING UP
-			setBottom(false);
-			setTextShown(true);
-			translateY.set(0);
-		}
-		//check if scroll is at bottom
-
-		scrollYValue.set(latest);
-	});
-
 	return (
 		<FramerWrapper>
-			<m.div className="h-screen relative">
-				<m.div
-					style={{
-						translateY: useTransform(translateY, [0, 100], ["0%", "-100%"]),
-					}}
-					className=" absolute z-20 flex w-full px-3 bg-white py-5 shadow-md"
+			<div className="h-full relative">
+				<div
+					className="z-20 flex w-full px-3 bg-white  flex-col items-start mb-3"
 					ref={ref}
 				>
-					<SearchBar className=" bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3" />
-				</m.div>
-				<m.div
-					className="w-full grid-flow-row grid-cols-2 grid gap-3 px-3 pb-16 pt-24 h-full overflow-auto "
-					ref={scrollContainerRef}
+					<SearchBar className=" bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3 mt-3" />
+					<div className="flex rounded-full bg-slate-100 my-3">
+						<div
+							className={`py-2 px-3 rounded-full ${
+								listView ? "bg-slate-200" : ""
+							}`}
+							onClick={() => setListView(true)}
+						>
+							<AiOutlineUnorderedList size={34} />
+						</div>
+						<div
+							className={`py-2 px-3 rounded-full ${
+								!listView ? "bg-slate-200" : ""
+							}`}
+							onClick={() => setListView(false)}
+						>
+							<AiOutlineAppstore size={34} />
+						</div>
+					</div>
+				</div>
+				<div
+					className="w-full grid-flow-row grid-cols-2 gap-3 px-3  h-full overflow-auto mb-5 "
+					style={{ display: listView ? "block" : "grid" }}
+					ref={ref}
 				>
 					{Array.from({ length: 10 }).map((_, i) => {
-						if (i == 9) {
-							return (
-								<div key={i} ref={bottomIntersectionDiv}>
-									<ProductCard borderStyles={borderRadiusBlobControls} />
-								</div>
-							);
-						}
-						return (
-							<ProductCard key={i} borderStyles={borderRadiusBlobControls} />
+						return listView ? (
+							<ListProduct key={i} borderStyles={borderRadiusBlobControls} />
+						) : (
+							<ProductCard borderStyles={borderRadiusBlobControls} />
 						);
 					})}
-				</m.div>
-			</m.div>
-			<AnimatePresence>
-				{bottom ? (
-					<motion.div
-						className="absolute bottom-0 right-0 px-16  touch-none text-white justify-center items-center w-full flex z-50"
-						onDrag={(event, info) => {
-							dragProgress.set(info.offset.y);
-							if (info.offset.y < -200) {
-								setLoading(true);
-							}
-						}}
-						onDragEnd={() => dragProgress.set(0)}
-						drag="y"
-						dragSnapToOrigin={true}
-						dragElastic={0.5}
-						dragConstraints={{ top: 0 }}
-						dragPropagation={true}
-						exit={{ opacity: 0, translateY: 100 }}
-						initial={{ opacity: 0, translateY: 100 }}
-						animate={{
-							opacity: 1,
-							transition: { duration: 0.5 },
-							translateY: 0,
-						}}
-					>
+				</div>
+				<SpringContainer
+					className=""
+					childrenHolderClassName="bg-black h-20 w-full text-white flex justify-center items-center"
+					touchEndCallback={() => setLoading(true)}
+					enableHover={false}
+				>
+					<h3>Tap to load more</h3>
+				</SpringContainer>
+				<AnimatePresence>
+					{loading ? (
 						<motion.div
-							style={{
-								backgroundColor: animatedColor,
-							}}
-							className=" flex p-3 items-center"
+							initial={{ scale: 0 }}
+							exit={{ scale: 0 }}
+							animate={{ scale: 1 }}
+							className="flex justify-center items-center"
 						>
-							<AnimatePresence>
-								{textShown ? (
-									<motion.div
-										className="w-full items-center px-2"
-										exit={{ opacity: 0 }}
-										animate={{ opacity: 1 }}
-										initial={{ opacity: 0 }}
-									>
-										Drag up to load more
-									</motion.div>
-								) : null}
-							</AnimatePresence>
-							<AnimatePresence>
-								{!loading ? (
-									<motion.div
-										exit={{ opacity: 0 }}
-										animate={{ opacity: 1 }}
-										initial={{ opacity: 0 }}
-									>
-										<BsArrowUp className="text-white text-3xl" />
-									</motion.div>
-								) : (
-									<motion.div
-										exit={{ opacity: 0 }}
-										animate={{ opacity: 1 }}
-										initial={{ opacity: 0 }}
-									>
-										<AiOutlineLoading className="text-white text-3xl animate-spin" />
-									</motion.div>
-								)}
-							</AnimatePresence>
+							<motion.div
+								animate={{
+									scale: [1, 2, 2, 1, 1],
+									rotate: [0, 0, 270, 270, 0],
+									borderRadius: ["20%", "20%", "50%", "50%", "20%"],
+								}}
+								transition={{
+									duration: 1.5,
+									ease: "easeInOut",
+									repeat: Infinity,
+									repeatType: "loop",
+								}}
+								className="h-12 w-12 bg-emerald-500 bottom-20 m-auto absolute z-50 flex justify-center items-center"
+							>
+								<AiOutlineLoading className="text-white text-3xl animate-spin" />
+							</motion.div>
 						</motion.div>
-					</motion.div>
-				) : null}
-			</AnimatePresence>
+					) : null}
+				</AnimatePresence>
+			</div>
 		</FramerWrapper>
 	);
 };
