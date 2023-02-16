@@ -2,6 +2,7 @@ import { AnimationControls, m } from "framer-motion";
 import React from "react";
 import RippleCard from "./RippleCard";
 import { HiOutlinePlus, HiOutlineMinus } from "react-icons/hi";
+import { AiOutlineDelete } from "react-icons/ai";
 import SpringContainer from "./SpringSquare";
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
 	price?: number;
 	category?: string;
 	borderStyles: AnimationControls;
+	removeItem?: (itemId: string) => void;
 };
 
 const ListProduct = ({
@@ -20,6 +22,7 @@ const ListProduct = ({
 	price = 730,
 	category = "Daily Essentials",
 	borderStyles,
+	removeItem,
 }: Props) => {
 	return (
 		<RippleCard onClickAction={() => {}}>
@@ -35,10 +38,18 @@ const ListProduct = ({
 					></m.span>
 				</div>
 				<div className="flex flex-col py-3 w-full">
-					<div className="flex flex-col">
+					<div className="flex flex-col relative">
 						<div className="font-semibold text-lg">{name}</div>
 						<div className="text-sm text-slate-400 font-medium">{category}</div>
 						<div className="font-semibold">{price}Rs</div>
+						{removeItem && (
+							<div
+								className="absolute top-0 right-0"
+								onClick={() => removeItem(id)}
+							>
+								<AiOutlineDelete size={30} />
+							</div>
+						)}
 					</div>
 					<div
 						className="flex pt-5 justify-end"

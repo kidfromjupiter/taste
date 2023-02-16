@@ -231,7 +231,9 @@ export default function SideBar() {
 								<div className="py-3 w-48">Logout</div>
 							</div>
 							<div>
-								<div className="py-3 w-48">Cart</div>
+								<Link href="/cart">
+									<div className="py-3 w-48">Cart</div>
+								</Link>
 								<div className="py-3 w-48">Grocery list</div>
 
 								<div className="py-3 w-48">Orders</div>
