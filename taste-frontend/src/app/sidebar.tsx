@@ -1,23 +1,22 @@
 "use client";
-import {
-	ReactElement,
-	ReactNode,
-	useCallback,
-	useState,
-	useEffect,
-} from "react";
+import { ReactElement, ReactNode, useState, useEffect } from "react";
 import { urls } from "@/aux/urlResolver";
 import { usePathname, useRouter } from "next/navigation";
-import { BsBoxArrowLeft } from "react-icons/bs";
 import Image from "next/image";
 import profile from "../../public/profile.jpeg";
 import { AiOutlineSetting } from "react-icons/ai";
 import Link from "next/link";
-import {} from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { CgMenuLeft } from "react-icons/cg";
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
 import { AnimatePresence, motion } from "framer-motion";
+import firebase from "firebase/compat/app";
+import { useSelector, useDispatch } from "react-redux";
+import { AuthState, logout } from "@/aux/authSlice";
+import "firebase/compat/auth";
+import { MessageType, sendMessage } from "@/aux/messagingSlice";
+import { logout as logout_axios } from "@/aux/fetch/auth";
+
 export default function SideBar() {
 	const { collapseSidebar, toggleSidebar, collapsed, toggled, broken, rtl } =
 		useProSidebar();
@@ -25,6 +24,7 @@ export default function SideBar() {
 	const [currentpathName, setCurrentpathName] = useState("");
 	const [backButtonShown, setBackButtonShown] = useState(false);
 	const [prefOpen, setPrefOpen] = useState(false);
+	const user: AuthState = useSelector((state: any) => state.auth);
 	const router = useRouter();
 
 	const path = usePathname();
@@ -33,27 +33,40 @@ export default function SideBar() {
 		let links: Array<ReactElement> = [];
 		let homeIndex: number = 0;
 		for (const key in urls) {
-			if (path !== null && path.includes(key)) {
-				setCurrentpathName(urls[key].title);
-				if (path.split("/").length > 2) {
-					setBackButtonShown(true);
-				}
-				if (key === "/") {
-					links.push(
-						<MenuItem
-							component={<Link href={key} />}
-							icon={urls[key].icon}
-							key={key}
-						>
-							{urls[key].title}
-						</MenuItem>
-					);
+			if (urls[key].sidebar === true) {
+				if (path !== null && path.includes(key)) {
+					setCurrentpathName(urls[key].title);
+					if (path.split("/").length > 2) {
+						setBackButtonShown(true);
+					}
+
+					if (key === "/") {
+						links.push(
+							<MenuItem
+								component={<Link href={key} />}
+								icon={urls[key].icon}
+								key={key}
+							>
+								{urls[key].title}
+							</MenuItem>
+						);
+					} else {
+						links.push(
+							<MenuItem
+								active
+								icon={urls[key].icon}
+								component={<Link href={key} />}
+								key={key}
+							>
+								{urls[key].title}
+							</MenuItem>
+						);
+					}
 				} else {
 					links.push(
 						<MenuItem
-							active
-							icon={urls[key].icon}
 							component={<Link href={key} />}
+							icon={urls[key].icon}
 							key={key}
 						>
 							{urls[key].title}
@@ -61,15 +74,12 @@ export default function SideBar() {
 					);
 				}
 			} else {
-				links.push(
-					<MenuItem
-						component={<Link href={key} />}
-						icon={urls[key].icon}
-						key={key}
-					>
-						{urls[key].title}
-					</MenuItem>
-				);
+				if (path !== null && path.includes(key)) {
+					setCurrentpathName(urls[key].title);
+					if (path.split("/").length > 2) {
+						setBackButtonShown(true);
+					}
+				}
 			}
 		}
 		return links;
@@ -79,6 +89,18 @@ export default function SideBar() {
 		setSidebarLinks(links);
 	}, [path]);
 
+	const dispatch = useDispatch();
+	const signOut = () => {
+		firebase.auth().signOut();
+		dispatch(logout());
+		dispatch(
+			sendMessage({
+				message: "Signed out successfully",
+				type: MessageType.INFO,
+			})
+		);
+		logout_axios();
+	};
 	return (
 		<div className="relative">
 			<Sidebar
@@ -88,44 +110,6 @@ export default function SideBar() {
 				backgroundColor="rgb(4 120 87)"
 				defaultCollapsed={false}
 			>
-				<Menu
-					className=" bg-emerald-700 hidden md:block"
-					menuItemStyles={{
-						button: ({ level, active, disabled }) => {
-							if (level === 0)
-								return {
-									"&:hover": {
-										backgroundColor: "unset",
-									},
-								};
-						},
-					}}
-				>
-					<MenuItem
-						className="mt-10 "
-						icon={
-							<div
-								className="bg-cover bg-center rounded-full drop-shadow-xl p"
-								style={{
-									backgroundImage: `url(${"/profile.jpeg"})`,
-									minHeight: `${collapsed ? "50px" : "60px"}`,
-									minWidth: `${collapsed ? "50px" : "60px"}`,
-									transition: "all 0.3s ease-in-out",
-								}}
-							></div>
-						}
-					>
-						<div className="flex flex-row items-center justify-evenly">
-							<div className="flex flex-col px-2">
-								<div className="text-xl font-medium">Hi John</div>
-								<div className="text-sm text-slate-300">john@doe.com</div>
-							</div>
-							<div className="bg-emerald-600 text-slate-50 p-3 rounded-full">
-								<BsBoxArrowLeft size={28} />
-							</div>
-						</div>
-					</MenuItem>
-				</Menu>
 				<Menu
 					className="bg-emerald-700 pb-5 mt-5"
 					closeOnClick={true}
@@ -147,9 +131,6 @@ export default function SideBar() {
 						return element;
 					})}
 				</Menu>
-				{/* <Menu className="">
-					<MenuItem></MenuItem>
-				</Menu> */}
 				<Menu
 					className="mt-5 absolute bottom-0"
 					menuItemStyles={{
@@ -170,9 +151,6 @@ export default function SideBar() {
 						{collapsed ? null : <div className=" ">Collapse</div>}
 					</MenuItem>
 				</Menu>
-				{/* <div className="absolute left-4 bottom-4 bg-emeral">
-					<CgMenuLeft size={30} />
-				</div> */}
 			</Sidebar>
 			<div className="py-3 px-2 md:hidden flex flex-row items-center  z-50 bg-white border-b-slate-100 border-b-2 fixed w-full">
 				<div className="flex flex-row justify-center items-center">
@@ -199,6 +177,7 @@ export default function SideBar() {
 						className="h-screen w-full fixed top-16 right-0 z-50"
 						onClick={() => setPrefOpen(false)}
 					>
+						{}
 						<motion.div
 							className=" bg-gray-100 shadow-lg rounded-lg absolute z-50 right-0 m-5 origin-top-right py-3 px-5"
 							initial={{ opacity: 0, scale: 0 }}
@@ -209,34 +188,56 @@ export default function SideBar() {
 							transition={{ type: "spring", stiffness: 500, damping: 30 }}
 							exit={{ opacity: 0, scale: 0 }}
 						>
-							<div className="py-3 flex justify-center">
-								<div className="rounded-full flex justify-center items-center overflow-hidden h-16 w-16 mr-5 relative">
-									<Image
-										src={profile}
-										alt="profile pic"
-										fill={true}
-										style={{ objectFit: "cover" }}
-									/>
+							{user.signedIn && (
+								<div className="py-3 flex justify-center">
+									<div className="rounded-full flex justify-center items-center overflow-hidden h-16 w-16 mr-5 relative">
+										<Image
+											src={user.photoUrl || profile}
+											alt="profile pic"
+											fill={true}
+											style={{ objectFit: "cover" }}
+										/>
+									</div>
+									<div className="flex justify-center flex-col ">
+										<div className="text-xl font-medium">
+											Hi {user.displayName}
+										</div>
+										<div className="text-sm text-slate-500">{user.email}</div>
+									</div>
 								</div>
-								<div className="flex justify-center flex-col ">
-									<div className="text-xl font-medium">Hi John</div>
-									<div className="text-sm text-slate-500">john@doe.com</div>
-								</div>
-							</div>
+							)}
+
 							<div className=" border-b-2 border-b-slate-200 ">
-								<Link href="/account">
-									<div className="py-3 w-48">Account</div>
-								</Link>
+								{user.signedIn && (
+									<Link href="/account">
+										<div className="py-3 w-48">Account</div>
+									</Link>
+								)}
+
 								<div className="py-3 w-48">Preferences</div>
-								<div className="py-3 w-48">Logout</div>
+								{user.signedIn ? (
+									<div className="py-3 w-48" onClick={signOut}>
+										Logout
+									</div>
+								) : (
+									<Link href="/login">
+										<div className="py-3 w-48">Login</div>
+									</Link>
+								)}
 							</div>
 							<div>
 								<Link href="/cart">
 									<div className="py-3 w-48">Cart</div>
 								</Link>
-								<div className="py-3 w-48">Grocery list</div>
+								{user.signedIn && (
+									<>
+										<div className="py-3 w-48">Grocery list</div>
 
-								<div className="py-3 w-48">Orders</div>
+										<Link href="/orders">
+											<div className="py-3 w-48">Orders</div>
+										</Link>
+									</>
+								)}
 							</div>
 						</motion.div>
 					</div>

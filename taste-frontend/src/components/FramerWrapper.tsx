@@ -1,14 +1,17 @@
-import { LazyMotion, m, domAnimation, DragHandlers } from "framer-motion";
-import React from "react";
+import { LazyMotion, m, domAnimation, useSpring } from "framer-motion";
+import React, { useEffect, useRef } from "react";
 import { FeatureBundle } from "framer-motion";
 type Props = {
 	children: React.ReactNode;
 };
 
 const FramerWrapper = ({ children }: Props) => {
+	const ref = useRef<HTMLDivElement>(null);
+
 	return (
 		<LazyMotion features={domAnimation}>
 			<m.div
+				ref={ref}
 				initial={{ x: 300, opacity: 0 }}
 				animate={{ x: 0, opacity: 1 }}
 				exit={{ x: -300, opacity: 0 }}
@@ -17,6 +20,9 @@ const FramerWrapper = ({ children }: Props) => {
 					stiffness: 260,
 					damping: 25,
 				}}
+				onAnimationComplete={() =>
+					window.scrollTo({ top: 0, behavior: "smooth" })
+				}
 			>
 				{children}
 			</m.div>

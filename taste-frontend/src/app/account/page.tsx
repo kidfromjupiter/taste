@@ -8,26 +8,30 @@ import AccountEditButton from "@/components/AccountEditButton";
 import { BsCreditCard2Front } from "react-icons/bs";
 import { TbTruckDelivery } from "react-icons/tb";
 import { RiShoppingBag2Line } from "react-icons/ri";
-import { EditAccountTypes } from "./edit/page";
+import { EditAccountTypes } from "./edit/types";
 import FramerWrapper from "@/components/FramerWrapper";
+import { useSelector } from "react-redux";
+import { AuthState } from "@/aux/authSlice";
+
 type Props = {};
 
 const AccountPage = (props: Props) => {
 	const router = useRouter();
+	const user: AuthState = useSelector((state: any) => state.auth);
 	return (
 		<FramerWrapper>
 			<div>
 				<div className="flex flex-col items-center justify-center bg-slate-100 text-gray-600 py-10">
 					<div className="rounded-full flex justify-center items-center overflow-hidden h-24 w-24 m-3 relative">
 						<Image
-							src={profile}
+							src={user.photoUrl || profile}
 							alt="profile pic"
 							fill={true}
 							style={{ objectFit: "cover" }}
 						/>
 					</div>
-					<div className="font-semibold text-lg">John Smith</div>
-					<div className="text-sm">john@smith.com</div>
+					<div className="font-semibold text-lg">{user.displayName}</div>
+					<div className="text-sm">{user.email}</div>
 				</div>
 
 				<div className="py-5 px-2 ">

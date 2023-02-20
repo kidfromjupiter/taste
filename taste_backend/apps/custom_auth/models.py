@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser,BaseUserManager
 from .countriesField import CountryField
+import uuid
 
 class UserManager(BaseUserManager):
     """ Manager for custom user profiles"""
@@ -32,24 +33,30 @@ class User(AbstractUser):
     email =models.EmailField( max_length=254,unique=True)
     first_name = models.CharField(max_length=254)
     last_name = models.CharField(max_length=254)
+    uid = models.CharField(max_length=254,unique=True,editable=False)
     objects = UserManager()
     username = None
     USERNAME_FIELD='email'
-    REQUIRED_FIELDS = ['first_name']
+    REQUIRED_FIELDS = ['first_name','uid']
     def __str__(self):
         return self.username
+    
+    def save(self, *args, **kwargs):
+        Address.objects.get_or_create(user=self)
+        super().save(*args, **kwargs)
+
 
 class Address(models.Model):
     """ Model for user addresses """
 
-    user = models.ForeignKey("custom_auth.User", on_delete=models.PROTECT)
-    addressLine1 = models.CharField(max_length=254)
-    addressLine2 = models.CharField(max_length=254)
-    city = models.CharField(max_length=254)
+    user = models.ForeignKey("custom_auth.User", on_delete=models.CASCADE)
+    addressLine1 = models.CharField(max_length=254,null=True)
+    addressLine2 = models.CharField(max_length=254,null=True)
+    city = models.CharField(max_length=254,null=True)
     country = CountryField()
-    postal_code = models.CharField(max_length=254)
-    phone = models.CharField(max_length=254)
-    domestic = models.BooleanField(default=True)
+    postal_code = models.CharField(max_length=254,null=True)
+    phone = models.CharField(max_length=254,null=True)
+    domestic = models.BooleanField(default=True,null=True)
 
     def __str__(self):
         return f"{self.user} Address"

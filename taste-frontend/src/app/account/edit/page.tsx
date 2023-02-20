@@ -6,19 +6,17 @@ import profile from "../../../../public/profile.jpeg";
 import { AnimatePresence, motion } from "framer-motion";
 import FormInput from "@/components/FormInput";
 import FramerWrapper from "@/components/FramerWrapper";
+import { useSelector } from "react-redux";
+import { AuthState } from "@/aux/authSlice";
+import { EditAccountTypes } from "./types";
 
 type Props = {};
-export enum EditAccountTypes {
-	DEFAULT,
-	ACCOUNT_INFO,
-	PAYMENT,
-	ADDRESS,
-}
 
 const EditAccountInfo = (props: Props) => {
 	const params = useSearchParams();
 	const __type = params.get("type");
 	const [type, setType] = useState(parseInt(__type || "0"));
+	const user: AuthState = useSelector((state: any) => state.auth);
 	const exitAnimation = {
 		opacity: 0,
 		y: -50,
@@ -37,15 +35,15 @@ const EditAccountInfo = (props: Props) => {
 				<div className="flex items-center mb-5">
 					<div className="rounded-full flex justify-center items-center overflow-hidden h-20 w-20 m-3 relative">
 						<Image
-							src={profile}
+							src={user.photoUrl || profile}
 							alt="profile pic"
 							fill={true}
 							style={{ objectFit: "cover" }}
 						/>
 					</div>
 					<div className="flex flex-col text-gray-600">
-						<div className="font-semibold text-xl">John Smith</div>
-						<div className="text-sm">john@smith.com</div>
+						<div className="font-semibold text-xl">{user.displayName}</div>
+						<div className="text-sm">{user.email}</div>
 					</div>
 				</div>
 				<div className="mb-5 font-semibold text-lg">

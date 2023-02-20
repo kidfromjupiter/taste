@@ -4,9 +4,9 @@ import { useSpring, animated } from "@react-spring/web";
 type Props = {
 	onClickAction: () => void;
 	children: React.ReactNode;
-	rippleColor: string;
-	className: string;
-	rippleOpacity: number;
+	rippleColor?: string;
+	className?: string;
+	rippleOpacity?: number;
 };
 
 const RippleCard = ({

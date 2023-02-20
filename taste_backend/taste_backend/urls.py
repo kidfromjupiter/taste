@@ -17,8 +17,9 @@ from django.contrib import admin
 from django.urls import path,include
 from apps.products.routers import urlpatterns as products_urls
 from apps.cart.routers import urlpatterns as cart_urls
+from apps.custom_auth.routers import urlpatterns as auth_urls
 
-routerUrls = products_urls + cart_urls
+routerUrls = products_urls + cart_urls + auth_urls
 
 
 urlpatterns = [

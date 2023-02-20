@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'apps.products',
     'apps.tracking',
     'djmoney',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,6 +59,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'taste_backend.urls'
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+CORS_ALLOW_CREDENTIALS = True
 
 TEMPLATES = [
     {
@@ -105,7 +112,11 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'apps.custom_auth.authentication.FirebaseAuthentication',
+    )
+}
 
 AUTH_USER_MODEL = 'custom_auth.User'
 

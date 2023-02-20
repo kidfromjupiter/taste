@@ -20,7 +20,7 @@ type Props = {
 const OrderCard = ({ date, eta, cancelled, price, items, id }: Props) => {
 	const router = useRouter();
 	return (
-		<RippleCard onClickAction={() => router.push(`/trackorders/${id}`)}>
+		<RippleCard onClickAction={() => router.push(`/orders/${id}`)}>
 			<div className="py-3 px-3 border-b-2 border-b-slate-100">
 				<div className="flex flex-row justify-between my-4">
 					<div className="font-semibold text-gray-600 text-xl">{date}</div>
