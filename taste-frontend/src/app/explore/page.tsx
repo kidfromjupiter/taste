@@ -12,6 +12,7 @@ import {
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import ListProduct from "@/components/ListProduct";
 import SpringContainer from "@/components/SpringSquare";
+import useBorderRadiusBlob from "@/components/hooks/useBorderRadiusBlob";
 type Props = {};
 
 const ExplorePage = (props: Props) => {
@@ -21,27 +22,6 @@ const ExplorePage = (props: Props) => {
 	const [listView, setListView] = useState(false);
 	const [loading, setLoading] = useState(false);
 	//animating blobs
-	const borderRadiusBlobControls = useAnimationControls();
-	useEffect(() => {
-		borderRadiusBlobControls.start({
-			borderRadius: [
-				"33% 67% 70% 30% / 30% 30% 70% 70%",
-				"37% 63% 51% 49% / 37% 65% 35% 63%",
-				"36% 64% 64% 36% / 64% 48% 52% 36%",
-				"37% 63% 51% 49% / 30% 30% 70% 70%",
-				"40% 60% 42% 58% / 41% 51% 49% 59%",
-				"33% 67% 70% 30% / 30% 30% 70% 70%",
-			],
-			transform: ["rotateY(0deg)", "rotateY(10deg)"],
-
-			transition: {
-				duration: 30,
-				repeat: Infinity,
-				repeatType: "loop",
-				ease: "easeInOut",
-			},
-		});
-	}, [listView, borderRadiusBlobControls]);
 
 	//drag to load more animations
 	useEffect(() => {
@@ -54,16 +34,16 @@ const ExplorePage = (props: Props) => {
 
 	return (
 		<FramerWrapper>
-			<div className="h-full relative">
+			<div className="h-full relative dark:bg-neutral-900">
 				<div
-					className="z-20 flex w-full px-3 bg-white  flex-col items-start mb-3"
+					className="z-20 flex w-full px-3 bg-white  flex-col items-start mb-3 dark:bg-neutral-900"
 					ref={ref}
 				>
-					<SearchBar className=" bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3 mt-3" />
-					<div className="flex rounded-full bg-slate-100 my-3">
+					<SearchBar className=" bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3 mt-3 dark:bg-neutral-700 dark:text-zinc-300" />
+					<div className="flex rounded-full bg-slate-100 my-3 dark:bg-neutral-700 dark:text-gray-50">
 						<div
 							className={`py-2 px-3 rounded-full ${
-								listView ? "bg-slate-200" : ""
+								listView ? "bg-slate-200 dark:bg-zinc-600" : ""
 							}`}
 							onClick={() => setListView(true)}
 						>
@@ -71,7 +51,7 @@ const ExplorePage = (props: Props) => {
 						</div>
 						<div
 							className={`py-2 px-3 rounded-full ${
-								!listView ? "bg-slate-200" : ""
+								!listView ? "bg-slate-200 dark:bg-zinc-600" : ""
 							}`}
 							onClick={() => setListView(false)}
 						>
@@ -84,12 +64,8 @@ const ExplorePage = (props: Props) => {
 					style={{ display: listView ? "block" : "grid" }}
 					ref={ref}
 				>
-					{Array.from({ length: 10 }).map((_, i) => {
-						return listView ? (
-							<ListProduct key={i} borderStyles={borderRadiusBlobControls} />
-						) : (
-							<ProductCard borderStyles={borderRadiusBlobControls} />
-						);
+					{Array.from({ length: 20 }).map((_, i) => {
+						return listView ? <ListProduct key={i} /> : <ProductCard key={i} />;
 					})}
 				</div>
 				<SpringContainer

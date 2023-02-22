@@ -32,8 +32,8 @@ const EditAccountInfo = (props: Props) => {
 	return (
 		<FramerWrapper>
 			<div className="px-3 flex flex-col h-screen">
-				<div className="flex items-center mb-5">
-					<div className="rounded-full flex justify-center items-center overflow-hidden h-20 w-20 m-3 relative">
+				<div className="flex items-center my-5 ">
+					<div className="rounded-full flex justify-center items-center overflow-hidden h-20 w-20 m-3 relative ">
 						<Image
 							src={user.photoUrl || profile}
 							alt="profile pic"
@@ -41,15 +41,15 @@ const EditAccountInfo = (props: Props) => {
 							style={{ objectFit: "cover" }}
 						/>
 					</div>
-					<div className="flex flex-col text-gray-600">
+					<div className="flex flex-col text-gray-600 dark:text-zinc-300">
 						<div className="font-semibold text-xl">{user.displayName}</div>
 						<div className="text-sm">{user.email}</div>
 					</div>
 				</div>
-				<div className="mb-5 font-semibold text-lg">
+				<div className="mb-5 font-semibold text-lg dark:text-gray-50">
 					Complete account setup to start ordering
 				</div>
-				<div className="flex w-full justify-evenly text-lg font-semibold border-b-slate-100 border-b-2">
+				<div className="flex w-full justify-evenly text-lg font-semibold border-b-slate-100 border-b-2 dark:border-b-neutral-800">
 					<div
 						className={`${
 							(type && type === EditAccountTypes.ACCOUNT_INFO) ||
@@ -143,7 +143,7 @@ const EditAccountInfo = (props: Props) => {
 						) : null}
 					</div>
 				</AnimatePresence>
-				<div className="flex pb-5 pt-2  bottom-0 mx-auto bg-gray-50 w-full justify-center items-center">
+				<div className="flex pb-5 pt-2  bottom-0 mx-auto bg-gray-50 w-full justify-center items-center dark:bg-neutral-900">
 					{(type && type === EditAccountTypes.DEFAULT) ||
 					type === EditAccountTypes.ACCOUNT_INFO ? null : (
 						<div

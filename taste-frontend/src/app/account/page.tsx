@@ -20,8 +20,8 @@ const AccountPage = (props: Props) => {
 	const user: AuthState = useSelector((state: any) => state.auth);
 	return (
 		<FramerWrapper>
-			<div>
-				<div className="flex flex-col items-center justify-center bg-slate-100 text-gray-600 py-10">
+			<div className="dark:bg-neutral-900 dark:text-gray-50">
+				<div className="flex flex-col items-center justify-center bg-slate-100 text-gray-600 py-10 dark:bg-neutral-800 dark:text-zinc-300">
 					<div className="rounded-full flex justify-center items-center overflow-hidden h-24 w-24 m-3 relative">
 						<Image
 							src={user.photoUrl || profile}

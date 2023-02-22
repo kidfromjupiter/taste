@@ -11,6 +11,7 @@ import {
 import { BsChevronBarUp } from "react-icons/bs";
 import SpringCard from "@/components/SpringCard";
 import FramerWrapper from "@/components/FramerWrapper";
+import { AnimatePresence } from "framer-motion";
 
 type Props = {};
 
@@ -19,7 +20,7 @@ const TrackOrder = (Props: Props) => {
 
 	return (
 		<FramerWrapper>
-			<div className="flex flex-col px-3 py-4  w-full">
+			<div className="flex flex-col px-3 py-4  w-full relative">
 				<div className="w-full">
 					<h3 className="text-4xl font-bold mb-3 ">Track Order</h3>
 					<div className="flex flex-row items-center w-full justify-between my-2">
@@ -30,7 +31,7 @@ const TrackOrder = (Props: Props) => {
 						<div className="text-2xl">345Rs</div>
 					</div>
 				</div>
-				<div className="flex flex-col font-semibold mt-4 border-b-2 border-b-slate-100">
+				<div className="flex flex-col font-semibold mt-4 border-b-2 dark:border-b-neutral-800 border-b-slate-100">
 					<div className="text-gray-600 text-2xl mb-10">
 						<h3>ETA: Thu, 20th September</h3>
 					</div>
@@ -122,7 +123,7 @@ const TrackOrder = (Props: Props) => {
 						</div>
 					</div>
 				</div>
-				<div className="flex flex-row items-center mb-5 border-b-2 border-b-slate-100">
+				<div className="flex flex-row items-center mb-5 border-b-2 dark:border-b-neutral-800 border-b-slate-100">
 					<div className="m-4 mr-6 text-6xl">
 						<TbHome />
 					</div>
@@ -138,18 +139,23 @@ const TrackOrder = (Props: Props) => {
 					onClick={() => setShown(!shown)}
 				>
 					<div>
-						<div className="font-semibold text-gray-600">See items</div>
+						<div className="font-semibold text-gray-600 dark:text-zinc-400">
+							See items
+						</div>
 					</div>
 					<div className="text-2xl animate-bounce">
 						<BsChevronBarUp />
 					</div>
 				</div>
+				<AnimatePresence>
+					{shown && (
+						<SpringCard
+							title="Ordered Items"
+							hideCallback={() => setShown(!shown)}
+						/>
+					)}
+				</AnimatePresence>
 			</div>
-			<SpringCard
-				show={shown}
-				title="Ordered Items"
-				hideCallback={() => setShown(!shown)}
-			/>
 		</FramerWrapper>
 	);
 };

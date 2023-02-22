@@ -14,7 +14,7 @@ const SearchBar = ({
 	onChangeCallback,
 	placeholder = "Search",
 	onEnter,
-	className = "bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3",
+	className = "",
 }: Props) => {
 	const [text, setText] = useState("");
 	const [keycode, setKeycode] = useState("");
@@ -39,7 +39,7 @@ const SearchBar = ({
 						return api.start({ scale: 1 });
 					}
 				}}
-				className={className}
+				className={`bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3 ${className}`}
 				placeholder={placeholder}
 				onSubmit={() => onEnter?.(text)}
 			/>

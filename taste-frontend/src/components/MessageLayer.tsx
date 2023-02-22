@@ -41,11 +41,24 @@ const MessageLayer = (props: Props) => {
 		}
 	};
 
+	const getColor = (param: MessageType) => {
+		switch (param) {
+			case MessageType.SUCCESS:
+				return "bg-emerald-600";
+			case MessageType.ERROR:
+				return "bg-red-500";
+			case MessageType.INFO:
+				return "bg-sky-700";
+		}
+	};
+
 	return (
 		<AnimatePresence mode="wait">
 			{message.message !== "" && (
 				<motion.div
-					className="fixed z-50 bg-gray-50 shadow-lg origin-bottom-right rounded-full flex p-1 items-center"
+					className={`fixed z-50 shadow-xl origin-bottom-right rounded-full flex p-1 items-center ${getColor(
+						message.type
+					)}`}
 					initial={{ bottom: 0, scale: 0, right: 0 }}
 					animate={{
 						bottom: 20,

@@ -2,43 +2,26 @@
 import ListProduct from "@/components/ListProduct";
 import React, { useEffect, useRef } from "react";
 import {
-	useAnimationControls,
 	useMotionValue,
 	useSpring,
 	motion,
 	useInView,
+	useMotionValueEvent,
 } from "framer-motion";
 import { BsChevronDown } from "react-icons/bs";
 import SpringContainer from "@/components/SpringSquare";
+import useBorderRadiusBlob from "@/components/hooks/useBorderRadiusBlob";
+import FramerWrapper from "@/components/FramerWrapper";
 
 type Props = {};
 
 const Cart = (props: Props) => {
-	const borderRadiusBlobControls = useAnimationControls();
+	const [blobStyles, startBlob] = useBorderRadiusBlob();
 	const translate = useMotionValue(0);
 	const rotate = useMotionValue(0);
 	const ref = useRef<HTMLDivElement>(null);
 	const isInView = useInView(ref);
-	useEffect(() => {
-		borderRadiusBlobControls.start({
-			borderRadius: [
-				"33% 67% 70% 30% / 30% 30% 70% 70%",
-				"37% 63% 51% 49% / 37% 65% 35% 63%",
-				"36% 64% 64% 36% / 64% 48% 52% 36%",
-				"37% 63% 51% 49% / 30% 30% 70% 70%",
-				"40% 60% 42% 58% / 41% 51% 49% 59%",
-				"33% 67% 70% 30% / 30% 30% 70% 70%",
-			],
-			transform: ["rotateY(0deg)", "rotateY(10deg)"],
 
-			transition: {
-				duration: 30,
-				repeat: Infinity,
-				repeatType: "loop",
-				ease: "easeInOut",
-			},
-		});
-	}, []);
 	useEffect(() => {
 		if (isInView) {
 			translate.set(200);
@@ -62,20 +45,20 @@ const Cart = (props: Props) => {
 		stiffness: 150,
 		damping: 20,
 	});
-	const rotateStyle = useSpring(rotate, {
-		// stiffness: 300,
-		// damping: 30,
-	});
+	const rotateStyle = useSpring(rotate, {});
+	useEffect(() => {
+		// startBlob();
+	}, []);
 
 	return (
-		<div className="">
-			<motion.div className="grid grid-flow-row gap-4 mb-10">
+		<FramerWrapper>
+			<div className="w-full px-3  h-full overflow-auto mb-10 ">
 				{Array.from({ length: 10 }).map((_, i) => {
 					if (i == 9) {
 						return (
 							<div key={i} ref={ref}>
 								<ListProduct
-									borderStyles={borderRadiusBlobControls}
+									borderStyles={blobStyles}
 									removeItem={() => console.log("remove item")}
 								/>
 							</div>
@@ -84,14 +67,14 @@ const Cart = (props: Props) => {
 					return (
 						<ListProduct
 							key={i}
-							borderStyles={borderRadiusBlobControls}
+							borderStyles={blobStyles}
 							removeItem={() => console.log("remove item")}
 						/>
 					);
 				})}
-			</motion.div>
+			</div>
 			<motion.div
-				className="fixed w-full h-60 bg-white shadow-top bottom-0 z-50"
+				className="fixed w-full h-60 bg-white shadow-top bottom-0 z-50 dark:bg-zinc-800"
 				style={{ translateY: translateStyle }}
 			>
 				<div
@@ -102,9 +85,9 @@ const Cart = (props: Props) => {
 						<BsChevronDown size={27} />
 					</motion.div>
 				</div>
-				<div className="pb-10 pt-3 px-5">
+				<div className="pb-10 pt-3 px-5 ">
 					<div className="w-full flex flex-col justify-center">
-						<div className="pb-3 border-b-slate-200 border-b-2">
+						<div className="pb-3 border-b-slate-200 border-b-2 dark:border-b-neutral-800">
 							<div className="flex justify-between pb-2">
 								<div>Subtotal items (2)</div>
 								<div>2400Rs</div>
@@ -129,7 +112,7 @@ const Cart = (props: Props) => {
 					</SpringContainer>
 				</div>
 			</motion.div>
-		</div>
+		</FramerWrapper>
 	);
 };
 

@@ -1,5 +1,7 @@
+import Image from "next/image";
 import React from "react";
 import SpringContainer from "./SpringSquare";
+import daily_essentials from "../../public/daily_essentials.webp";
 
 type Props = {
 	url: string;
@@ -10,14 +12,17 @@ type Props = {
 const CollectionCardSimple = ({ imgUrl, url, title }: Props) => {
 	return (
 		<SpringContainer
-			className="bg-gray-50 rounded-lg "
-			childrenHolderClassName=" p-0"
+			className="rounded-lg "
+			childrenHolderClassName=" p-0 relative  h-48 w-48 overflow-hidden rounded-lg"
 		>
-			<div className="overflow-hidden h-48 w-48 rounded-2xl relative flex items-end justify-end whitespace-normal lg:cursor-pointer">
-				<div
-					style={{ backgroundImage: `url('${imgUrl}')` }}
-					className="h-full w-full bg-center bg-cover z-0 absolute top-0"
-				></div>
+			<div className="absolute top-0 right-0">
+				<Image
+					src={daily_essentials || imgUrl}
+					alt="spice bottle"
+					className="bg-cover bg-center "
+				/>
+			</div>
+			<div className="overflow-hidden h-full flex items-end justify-end whitespace-normal lg:cursor-pointer">
 				<h4 className="text-gray-50 z-30  font-semibold text-3xl text-right flex p-3">
 					{title}
 				</h4>
