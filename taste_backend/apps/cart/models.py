@@ -5,9 +5,6 @@ class CartItem(models.Model):
     quantity = models.IntegerField(default=1)
     cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
 
-    # def __str__(self):
-    #     return self.user.username
-    
     def addtocart(self,quantity=1):
         """Add product to cart"""
 
@@ -28,8 +25,7 @@ class CartItem(models.Model):
     
     def increase_quantity(self,quantity=1):
         """Increase quantity of product in cart"""
-
-        if self.product.stock - self.quantity - quantity < 0:
+        if self.product.stock - quantity < 0:
             self.quantity = self.product.stock
         else:
         # reducing product stock

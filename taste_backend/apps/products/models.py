@@ -28,7 +28,8 @@ class Product(models.Model):
         """Increase stock of product"""
         self.stock += quantity
         self.save()
-
+    class Meta:
+        ordering = ['-created_at']
 
 class Collection(models.Model):
     name = models.CharField(max_length=64)

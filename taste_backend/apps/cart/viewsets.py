@@ -14,7 +14,7 @@ class CartViewSet(viewsets.ModelViewSet):
     @action(detail=False,methods=['post'])
     def addtocart(self,request,*args,**kwargs):
         # creating cart if not exist. creating cart item from product
-        cart,_ = Cart.objects.get_or_create(user=User.objects.get(pk=request.data['user']))
+        cart,exists = Cart.objects.get_or_create(user=User.objects.get(pk=request.data['user']))
         request.data['cart'] = cart.pk
         cartItem = CartItemSerializer(data=request.data)
         if cartItem.is_valid():
@@ -24,8 +24,13 @@ class CartViewSet(viewsets.ModelViewSet):
                 return Response(status=status.HTTP_200_OK,data=cartItem.data)
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
+        #cart item already exists
         else:
-            return Response(data=cartItem.errors,status=status.HTTP_400_BAD_REQUEST)
+            cartItem = CartItem.objects.get(product=request.data['product'],cart=cart)
+            request.data['cartItem'] = cartItem.pk
+            self.increasequantity(request,*args,**kwargs)
+            cartItem = CartItem.objects.get(product=request.data['product'],cart=cart)
+            return Response(status=status.HTTP_200_OK,data=CartItemSerializer(cartItem).data)
             
     @action(detail=False,methods=['post'])
     def increasequantity(self,request,*args,**kwargs):
@@ -33,6 +38,7 @@ class CartViewSet(viewsets.ModelViewSet):
         cartItem = CartItem.objects.get(pk=request.data['cartItem'])
         if cartItem.cart.user.pk != request.data['user']:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
         cartItem.increase_quantity(request.data['quantity'] if 'quantity' in request.data else 1)
         
         return Response(status=status.HTTP_200_OK,data=CartItemSerializer(cartItem).data)
@@ -58,3 +64,4 @@ class CartViewSet(viewsets.ModelViewSet):
         
         cartItem.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    

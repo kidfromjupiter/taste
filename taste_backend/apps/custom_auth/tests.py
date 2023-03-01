@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import User
+from .models import User,Address
 from faker import Faker
 class UserTestCase(TestCase):
     faker = Faker()
@@ -23,4 +23,8 @@ class UserTestCase(TestCase):
     def test_user_creation(self):
         self.assertEqual(User.objects.count(),1)
         self.assertEqual(User.objects.first().email,self.email)
+
+    def test_address_creation(self):
+        self.assertEqual(Address.objects.count(),1)
+        self.assertEqual(Address.objects.first().user,self.user)
 # Create your tests here.

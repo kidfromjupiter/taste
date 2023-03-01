@@ -54,6 +54,13 @@ class CartTestCase(APITestCase,TestCase):
         response = self.client.post(f'/api/cart/addtocart/',{'product':self.product.pk,'quantity':10,'user':self.user.pk},format='json')
         self.assertEqual(response.status_code,200)
         self.assertEqual(Product.objects.get(pk=self.product.pk).stock,self.product.stock - 10)
+
+        #adding to cart again should increase quantity
+        response = self.client.post(f'/api/cart/addtocart/',{'product':self.product.pk,'quantity':3,'user':self.user.pk},format='json')
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(Product.objects.get(pk=self.product.pk).stock,self.product.stock - 13)
+        self.assertEqual(response.data['quantity'],13)
+        
     
     def test_addtocart_with_invalid_quantity(self):
         #product stock should not decrease
