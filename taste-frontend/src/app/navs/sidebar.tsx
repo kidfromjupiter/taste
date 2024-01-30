@@ -2,14 +2,12 @@
 import { ReactElement, ReactNode, useState, useEffect } from "react";
 import { urls } from "@/aux/urlResolver";
 import { usePathname, useRouter } from "next/navigation";
-import Image from "next/image";
-import profile from "../../public/profile.jpeg";
 import { AiOutlineSetting } from "react-icons/ai";
 import Link from "next/link";
 import { FiChevronLeft } from "react-icons/fi";
 import { CgMenuLeft } from "react-icons/cg";
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import firebase from "firebase/compat/app";
 import { useSelector, useDispatch } from "react-redux";
 import { AuthState, logout } from "@/aux/authSlice";
@@ -18,6 +16,7 @@ import { MessageType, sendMessage } from "@/aux/messagingSlice";
 import { logout as logout_axios } from "@/aux/fetch/auth";
 import { BsSun, BsMoon } from "react-icons/bs";
 import { setTheme, Theme } from "@/aux/themeSlice";
+import MobilePrefMenu from "./mobilePrefMenu";
 
 export default function SideBar() {
 	const { collapseSidebar, toggleSidebar, collapsed } = useProSidebar();
@@ -237,75 +236,7 @@ export default function SideBar() {
 			</div>
 			<AnimatePresence>
 				{prefOpen ? (
-					<div
-						className="h-screen w-full fixed top-16 right-0 z-50 "
-						onClick={() => setPrefOpen(false)}
-					>
-						{}
-						<motion.div
-							className=" bg-gray-100 shadow-lg rounded-lg absolute z-50 right-0 m-5 origin-top-right py-3 px-5 dark:bg-neutral-700 dark:text-gray-50 dark:shadow-neutral-900"
-							initial={{ opacity: 0, scale: 0 }}
-							animate={{
-								opacity: 1,
-								scale: 1,
-							}}
-							transition={{ type: "spring", stiffness: 500, damping: 30 }}
-							exit={{ opacity: 0, scale: 0 }}
-						>
-							{user.signedIn && (
-								<div className="py-3 flex justify-center">
-									<div className="rounded-full flex justify-center items-center overflow-hidden h-16 w-16 mr-5 relative">
-										<Image
-											src={user.photoUrl || profile}
-											alt="profile pic"
-											fill={true}
-											style={{ objectFit: "cover" }}
-										/>
-									</div>
-									<div className="flex justify-center flex-col ">
-										<div className="text-xl font-medium">
-											Hi {user.displayName}
-										</div>
-										<div className="text-sm text-slate-500 dark:text-neutral-400">
-											{user.email}
-										</div>
-									</div>
-								</div>
-							)}
-
-							<div className=" border-b-2 border-b-slate-200 dark:border-b-neutral-600">
-								{user.signedIn && (
-									<Link href="/account">
-										<div className="py-3 w-48">Account</div>
-									</Link>
-								)}
-
-								{user.signedIn ? (
-									<div className="py-3 w-48" onClick={signOut}>
-										Logout
-									</div>
-								) : (
-									<Link href="/login">
-										<div className="py-3 w-48">Login</div>
-									</Link>
-								)}
-							</div>
-							<div>
-								<Link href="/cart">
-									<div className="py-3 w-48">Cart</div>
-								</Link>
-								{user.signedIn && (
-									<>
-										<div className="py-3 w-48">Grocery list</div>
-
-										<Link href="/orders">
-											<div className="py-3 w-48">Orders</div>
-										</Link>
-									</>
-								)}
-							</div>
-						</motion.div>
-					</div>
+					MobilePrefMenu({ signOut, user, setPrefOpen })
 				) : null}
 			</AnimatePresence>
 		</div>

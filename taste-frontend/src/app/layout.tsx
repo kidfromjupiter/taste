@@ -2,7 +2,7 @@
 import { AnimatePresence } from "framer-motion";
 import "@/styles/globals.css";
 import { ProSidebarProvider } from "react-pro-sidebar";
-import SideBar from "./sidebar";
+import SideBar from "./navs/sidebar";
 import { initializeFirebase } from "@/aux/firebase";
 import { store } from "../aux/store";
 import { Provider } from "react-redux";
