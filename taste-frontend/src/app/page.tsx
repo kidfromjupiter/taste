@@ -4,6 +4,7 @@ import FramerWrapper from "@/components/FramerWrapper";
 import useBorderRadiusBlob from "@/components/hooks/useBorderRadiusBlob";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import SimpleProductCard from "@/components/SimpleProductCard";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Page() {
@@ -12,11 +13,15 @@ export default function Page() {
 		startBlob();
 	}, []);
 
+	const router = useRouter();
+
 	return (
 		<FramerWrapper>
 			<div className="flex flex-col px-3 dark:bg-neutral-900">
 				<div className="py-3 ">
-					<SearchBar className="dark:bg-zinc-800 text-white" />
+					<SearchBar className="dark:bg-zinc-800 text-white" onEnter={(searchtext) => {
+						router.push(`/search?query=${searchtext}`)
+					}} />
 				</div>
 				<div className="w-full py-3 mb-3">
 					<div
@@ -34,7 +39,7 @@ export default function Page() {
 					</h3>
 					<div className=" whitespace-nowrap grid grid-flow-col gap-3 overflow-auto pb-3">
 						{Array.from({ length: 10 }).map((_, i) => (
-							<SimpleProductCard key={i}  />
+							<SimpleProductCard key={i} />
 						))}
 					</div>
 				</div>

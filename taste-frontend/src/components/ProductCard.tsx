@@ -4,9 +4,9 @@ import { HiOutlinePlus, HiOutlineMinus } from "react-icons/hi";
 import { BsCart } from "react-icons/bs";
 import { AnimationControls, m, useInView } from "framer-motion";
 import useBorderRadiusBlob from "./hooks/useBorderRadiusBlob";
-type Props = {};
+import { Product } from "@/app/types";
 
-const ProductCard = ({}: Props) => {
+const ProductCard = ({ image, name, domestic_price, domestic_price_currency }: Product) => {
 	const [blobStyles, _, __, ref] = useBorderRadiusBlob();
 
 	return (
@@ -19,7 +19,7 @@ const ProductCard = ({}: Props) => {
 			</div>
 			<div className="relative flex justify-center items-center" ref={ref}>
 				<div
-					style={{ backgroundImage: `url(${"/spicebottle.png"})` }}
+					style={{ backgroundImage: `url(${image})` }}
 					className=" h-28 w-28 bg-cover bg-center my-6 z-10"
 				></div>
 				<m.span
@@ -28,8 +28,8 @@ const ProductCard = ({}: Props) => {
 				></m.span>
 			</div>
 			<div className="dark:text-gray-50">
-				<div className="font-medium text-lg">Turmeric Powder</div>
-				<div className=" font-light">780Rs</div>
+				<div className="font-medium text-lg">{name}</div>
+				<div className=" font-light">{parseFloat(domestic_price).toFixed(2)} {domestic_price_currency}</div>
 			</div>
 			<div className="my-3">
 				<div className="text-gray-500 text-sm text-center">

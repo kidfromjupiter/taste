@@ -2,7 +2,7 @@
 
 import ProductCard from "@/components/ProductCard";
 import SearchBar from "@/components/SearchBar/SearchBar";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, use } from "react";
 import FramerWrapper from "@/components/FramerWrapper";
 import {
 	AiOutlineLoading,
@@ -13,15 +13,25 @@ import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import ListProduct from "@/components/ListProduct";
 import SpringContainer from "@/components/SpringSquare";
 import useBorderRadiusBlob from "@/components/hooks/useBorderRadiusBlob";
+import { useRouter, useSearchParams } from "next/navigation";
+import { searchProducts } from "@/aux/fetch/apis";
 type Props = {};
+import { Product, Response } from "../types";
 
-const ExplorePage = (props: Props) => {
+const SearchPage = (props: Props) => {
 	const ref = useRef<HTMLDivElement>(null);
 
 	//detecting viewport entry of last list item
 	const [listView, setListView] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [response, setResponse] = useState<Response | null>(null);
 	//animating blobs
+
+	const router = useRouter();
+
+	//searching
+	const searchParams = useSearchParams();
+
 
 	//drag to load more animations
 	useEffect(() => {
@@ -32,6 +42,23 @@ const ExplorePage = (props: Props) => {
 		}
 	}, [loading]);
 
+	useEffect(() => {
+		searchProducts(searchParams.get("query") || "").then((res) => {
+			setResponse(res);
+		});
+	}, [searchParams.get("query")])
+
+	const loadNextPage = () => {
+		if (response) {
+			fetch(response.next).then((res) => {
+				res.json().then((data) => {
+					setResponse({ count: response.count + data.count, next: data.next, previous: data.previous, results: [...response.results, ...data.results] })
+				})
+			}
+			)
+		}
+	}
+
 	return (
 		<FramerWrapper>
 			<div className="h-full relative dark:bg-neutral-900">
@@ -39,20 +66,21 @@ const ExplorePage = (props: Props) => {
 					className="z-20 flex w-full px-3 bg-white  flex-col items-start mb-3 dark:bg-neutral-900"
 					ref={ref}
 				>
-					<SearchBar className=" bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3 mt-3 dark:bg-neutral-700 dark:text-zinc-300" />
+					<SearchBar
+						onEnter={(searchtext) => router.push(`/search?query=${searchtext}`)}
+						value={searchParams.get("query") || ""}
+						className=" bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3 mt-3 dark:bg-neutral-700 dark:text-zinc-300" />
 					<div className="flex rounded-full bg-slate-100 my-3 dark:bg-neutral-700 dark:text-gray-50">
 						<div
-							className={`py-2 px-3 rounded-full ${
-								listView ? "bg-slate-200 dark:bg-zinc-600" : ""
-							}`}
+							className={`py-2 px-3 rounded-full ${listView ? "bg-slate-200 dark:bg-zinc-600" : ""
+								}`}
 							onClick={() => setListView(true)}
 						>
 							<AiOutlineUnorderedList size={34} />
 						</div>
 						<div
-							className={`py-2 px-3 rounded-full ${
-								!listView ? "bg-slate-200 dark:bg-zinc-600" : ""
-							}`}
+							className={`py-2 px-3 rounded-full ${!listView ? "bg-slate-200 dark:bg-zinc-600" : ""
+								}`}
 							onClick={() => setListView(false)}
 						>
 							<AiOutlineAppstore size={34} />
@@ -64,14 +92,24 @@ const ExplorePage = (props: Props) => {
 					style={{ display: listView ? "block" : "grid" }}
 					ref={ref}
 				>
-					{Array.from({ length: 20 }).map((_, i) => {
-						return listView ? <ListProduct key={i} /> : <ProductCard key={i} />;
+					{response?.results.map((p: Product, i: number) => {
+						return listView ?
+							<ListProduct
+								key={i}
+								name={p.name}
+								img={p.image}
+							/>
+							: <ProductCard
+								key={i}
+								{...p}
+
+							/>;
 					})}
 				</div>
 				<SpringContainer
 					className=""
 					childrenHolderClassName="bg-black h-20 w-full text-white flex justify-center items-center"
-					touchEndCallback={() => setLoading(true)}
+					touchEndCallback={loadNextPage}
 					enableHover={false}
 				>
 					<h3>Tap to load more</h3>
@@ -107,4 +145,4 @@ const ExplorePage = (props: Props) => {
 		</FramerWrapper>
 	);
 };
-export default ExplorePage;
+export default SearchPage;

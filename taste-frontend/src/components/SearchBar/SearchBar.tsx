@@ -15,8 +15,9 @@ const SearchBar = ({
 	placeholder = "Search",
 	onEnter,
 	className = "",
+	value = "",
 }: Props) => {
-	const [text, setText] = useState("");
+	const [text, setText] = useState(value);
 	const [keycode, setKeycode] = useState("");
 	const [styles, api] = useSpring(() => ({
 		scale: 1,
@@ -25,6 +26,7 @@ const SearchBar = ({
 	return (
 		<animated.div className="w-full" style={styles}>
 			<input
+				value={text}
 				onChange={(e) => {
 					onChangeCallback?.(e.target.value);
 					setText(e.target.value);
@@ -33,15 +35,20 @@ const SearchBar = ({
 					if (e.key == "Backspace") {
 						return api.start({ scale: 0.975 });
 					}
+
+
 				}}
 				onKeyUp={(e) => {
 					if (e.key == "Backspace") {
 						return api.start({ scale: 1 });
 					}
+					if (e.key == "Enter") {
+						onEnter?.(text);
+					}
 				}}
 				className={`bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3 ${className}`}
 				placeholder={placeholder}
-				onSubmit={() => onEnter?.(text)}
+
 			/>
 		</animated.div>
 	);

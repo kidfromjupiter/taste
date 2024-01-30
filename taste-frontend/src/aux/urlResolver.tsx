@@ -19,11 +19,6 @@ export const urls: Record<string, sidebarMeta> = {
 		icon: <AiOutlineAppstore size={25} />,
 		sidebar: true,
 	},
-	"/explore": {
-		title: "Explore",
-		icon: <BsBoxSeam size={25} />,
-		sidebar: true,
-	},
 	"/orders": {
 		title: "Orders",
 		sidebar: false,

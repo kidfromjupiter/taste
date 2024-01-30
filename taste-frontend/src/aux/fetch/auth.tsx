@@ -7,7 +7,7 @@ export async function login(
 	email: string | null
 ) {
 	const response = await axiosInstance.post(
-		"/api/auth/login/",
+		"/auth/login/",
 		{
 			uid,
 			displayName,
@@ -20,14 +20,14 @@ export async function login(
 }
 
 export async function verifysession() {
-	const response = await axiosInstance.get("/api/auth/verifysession/", {
+	const response = await axiosInstance.get("/auth/verifysession/", {
 		withCredentials: true,
 	});
 	return response.data;
 }
 
 export async function logout() {
-	const response = await axiosInstance.get("/api/auth/logout/", {
+	const response = await axiosInstance.get("/auth/logout/", {
 		withCredentials: true,
 	});
 	return response.data;
