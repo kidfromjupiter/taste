@@ -41,7 +41,6 @@ const SpringCard = ({ hideCallback, title }: Props) => {
 							price={300}
 							id=""
 							category=" Daily Essentials"
-							borderStyles={borderRadiusBlobStyles}
 							simplified={true}
 						/>
 					))}

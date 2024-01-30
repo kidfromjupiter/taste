@@ -13,6 +13,7 @@ import SpringContainer from "@/components/SpringSquare";
 import useBorderRadiusBlob from "@/components/hooks/useBorderRadiusBlob";
 import FramerWrapper from "@/components/FramerWrapper";
 
+
 type Props = {};
 
 const Cart = (props: Props) => {
@@ -58,7 +59,7 @@ const Cart = (props: Props) => {
 						return (
 							<div key={i} ref={ref}>
 								<ListProduct
-									borderStyles={blobStyles}
+									// borderStyles={blobStyles}
 									removeItem={() => console.log("remove item")}
 								/>
 							</div>
@@ -67,7 +68,7 @@ const Cart = (props: Props) => {
 					return (
 						<ListProduct
 							key={i}
-							borderStyles={blobStyles}
+							// borderStyles={blobStyles}
 							removeItem={() => console.log("remove item")}
 						/>
 					);

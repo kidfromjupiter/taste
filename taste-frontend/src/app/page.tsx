@@ -34,7 +34,7 @@ export default function Page() {
 					</h3>
 					<div className=" whitespace-nowrap grid grid-flow-col gap-3 overflow-auto pb-3">
 						{Array.from({ length: 10 }).map((_, i) => (
-							<SimpleProductCard key={i} borderStyles={blobStyles} />
+							<SimpleProductCard key={i}  />
 						))}
 					</div>
 				</div>

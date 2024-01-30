@@ -5,6 +5,9 @@ import {
 	useInView,
 } from "framer-motion";
 import { useInView as useInView_spring } from "@react-spring/web";
+import {
+  useWindowWidth,
+} from '@react-hook/window-size'
 
 function useBorderRadiusBlob(): [
 	AnimationControls,
@@ -14,7 +17,9 @@ function useBorderRadiusBlob(): [
 ] {
 	const [returned_ref, isInView] = useInView_spring();
 	const borderRadiusBlobControls = useAnimationControls();
-	const [width, setWidth] = useState<number>(window.innerWidth);
+	const onlyWidth = useWindowWidth();
+	const [width, setWidth] = useState<number>(onlyWidth);
+	// const [width, setWidth] = useState<number>(500);
 
 	function handleWindowSizeChange() {
 		setWidth(window.innerWidth);
