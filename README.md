@@ -26,7 +26,37 @@
 ## Linking everything up
 
 - Import all the api endpoints from each app from the app's directory and add them to the urlpatterns in `taste_backend/urls.py`
-
+---
 # **Frontend**
 
-**Note: mata kammali bn mekath liyanna. passe liyanawa**
+## Getting started
+
+ 1. install all the dependencies using `npm install` or `yarn install`
+ 2. run dev server using `npm run dev` or `yarn dev`
+
+#### Pages currently finished
+design is finalised. All UI elements work as intended in the frontend.
+- Explore
+- Orders
+- Cart
+#### Pages almost finished
+design is not finalised but most UI elements work. So... usable but not pretty?
+ - account edit page
+ - home
+### Pages I have no idea what to do about
+ - Collections (might remove after)
+ - Grocery list
+
+## To do
+
+ Link up APIs
+- [ ] Search
+- [ ] add item to cart
+- [ ] remove item from cart
+- [ ] increase quantity of item in cart
+- [ ] decrease quantity of item in cart
+
+pages to implement
+- [ ] Product page
+- [ ] product not found pages
+
