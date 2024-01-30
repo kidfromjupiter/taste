@@ -47,7 +47,7 @@ class ProductTestCase(APITestCase,TestCase):
     
     def setUp(self) -> None:
         self.product = Product.objects.create(
-            name = 'test product',
+            name = self.name,
             description = self.fake.text(),
             stock = 10,
             domestic_price = 100,
@@ -74,7 +74,6 @@ class ProductTestCase(APITestCase,TestCase):
     def test_search(self):
         response = self.client.get("/api/products/?search=something")
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['name'],self.name)
-        # print(response.data)
+        self.assertEqual(response.data['results'][0]['name'],self.name)
 
     
