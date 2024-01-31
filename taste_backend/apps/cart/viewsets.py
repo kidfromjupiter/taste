@@ -14,7 +14,7 @@ class CartViewSet(viewsets.ModelViewSet):
     @action(detail=False,methods=['post'])
     def addtocart(self,request,*args,**kwargs):
         # creating cart if not exist. creating cart item from product
-        cart,exists = Cart.objects.get_or_create(user=User.objects.get(pk=request.data['user']))
+        cart,exists = Cart.objects.get_or_create(user=User.objects.get(pk=request.headers['uid']))
         request.data['cart'] = cart.pk
         cartItem = CartItemSerializer(data=request.data)
         if cartItem.is_valid():
@@ -36,7 +36,7 @@ class CartViewSet(viewsets.ModelViewSet):
     def increasequantity(self,request,*args,**kwargs):
         # increasing quantity of cart item
         cartItem = CartItem.objects.get(pk=request.data['cartItem'])
-        if cartItem.cart.user.pk != request.data['user']:
+        if cartItem.cart.user.pk != request.headers['uid']:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
         cartItem.increase_quantity(request.data['quantity'] if 'quantity' in request.data else 1)
@@ -47,7 +47,7 @@ class CartViewSet(viewsets.ModelViewSet):
     def decreasequantity(self,request,*args,**kwargs):
         # decreasing quantity of cart item
         cartItem = CartItem.objects.get(pk=request.data['cartItem'])
-        if cartItem.cart.user.pk != request.data['user']:
+        if cartItem.cart.user.pk != request.headers['uid']:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
         cartItem.decrease_quantity(request.data['quantity'] if 'quantity' in request.data else 1)
@@ -59,7 +59,7 @@ class CartViewSet(viewsets.ModelViewSet):
     def removefromcart(self,request,*args,**kwargs):
         # removing cart item from cart
         cartItem = CartItem.objects.get(pk=request.data['cartItem'])
-        if cartItem.cart.user.pk != request.data['user']:
+        if cartItem.cart.user.pk != request.headers['uid']:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
         cartItem.delete()
