@@ -5,16 +5,18 @@ from .serializers import CartSerializer,CartItemSerializer
 from rest_framework.decorators import action
 from apps.custom_auth.models import User
 from .models import Cart,CartItem
+from rest_framework.permissions import IsAuthenticated
+
 # Create your views here.
 class CartViewSet(viewsets.ModelViewSet):
     serializer_class = CartSerializer
     queryset = Cart.objects.all()
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False,methods=['post'])
     def addtocart(self,request,*args,**kwargs):
         # creating cart if not exist. creating cart item from product
-        cart,exists = Cart.objects.get_or_create(user=User.objects.get(pk=request.headers['uid']))
+        cart,exists = Cart.objects.get_or_create(user=request.user)
         request.data['cart'] = cart.pk
         cartItem = CartItemSerializer(data=request.data)
         if cartItem.is_valid():
@@ -36,7 +38,7 @@ class CartViewSet(viewsets.ModelViewSet):
     def increasequantity(self,request,*args,**kwargs):
         # increasing quantity of cart item
         cartItem = CartItem.objects.get(pk=request.data['cartItem'])
-        if cartItem.cart.user.pk != request.headers['uid']:
+        if cartItem.cart.user.pk != request.user.pk:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
         cartItem.increase_quantity(request.data['quantity'] if 'quantity' in request.data else 1)
@@ -47,7 +49,7 @@ class CartViewSet(viewsets.ModelViewSet):
     def decreasequantity(self,request,*args,**kwargs):
         # decreasing quantity of cart item
         cartItem = CartItem.objects.get(pk=request.data['cartItem'])
-        if cartItem.cart.user.pk != request.headers['uid']:
+        if cartItem.cart.user.pk != request.user.pk:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
         cartItem.decrease_quantity(request.data['quantity'] if 'quantity' in request.data else 1)
@@ -59,7 +61,7 @@ class CartViewSet(viewsets.ModelViewSet):
     def removefromcart(self,request,*args,**kwargs):
         # removing cart item from cart
         cartItem = CartItem.objects.get(pk=request.data['cartItem'])
-        if cartItem.cart.user.pk != request.headers['uid']:
+        if cartItem.cart.user.pk != request.user.pk:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
         cartItem.delete()
