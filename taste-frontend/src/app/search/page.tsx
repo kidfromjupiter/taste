@@ -23,37 +23,35 @@ const SearchPage = (props: Props) => {
 
 	//detecting viewport entry of last list item
 	const [listView, setListView] = useState(false);
+
+	//loading more products animation
 	const [loading, setLoading] = useState(false);
 	const [response, setResponse] = useState<Response | null>(null);
-	//animating blobs
 
 	const router = useRouter();
 
 	//searching
 	const searchParams = useSearchParams();
 
-
-	//drag to load more animations
 	useEffect(() => {
-		if (loading == true) {
-			setTimeout(() => {
-				setLoading(false);
-			}, 3000);
-		}
-	}, [loading]);
 
-	useEffect(() => {
 		searchProducts(searchParams.get("query") || "").then((res) => {
+			setLoading(true);
 			setResponse(res);
+			setLoading(false);
 		});
+
 	}, [searchParams.get("query")])
 
 	const loadNextPage = () => {
+		setLoading(true);
 		if (response) {
 			fetch(response.next).then((res) => {
 				res.json().then((data) => {
 					setResponse({ count: response.count + data.count, next: data.next, previous: data.previous, results: [...response.results, ...data.results] })
+					setLoading(false);
 				})
+
 			}
 			)
 		}
@@ -67,7 +65,9 @@ const SearchPage = (props: Props) => {
 					ref={ref}
 				>
 					<SearchBar
-						onEnter={(searchtext) => router.push(`/search?query=${searchtext}`)}
+						onEnter={(searchtext) => {
+							router.push(`/search?query=${searchtext}`)
+						}}
 						value={searchParams.get("query") || ""}
 						className=" bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3 mt-3 dark:bg-neutral-700 dark:text-zinc-300" />
 					<div className="flex rounded-full bg-slate-100 my-3 dark:bg-neutral-700 dark:text-gray-50">
@@ -96,8 +96,8 @@ const SearchPage = (props: Props) => {
 						return listView ?
 							<ListProduct
 								key={i}
-								name={p.name}
-								img={p.image}
+								{...p}
+
 							/>
 							: <ProductCard
 								key={i}

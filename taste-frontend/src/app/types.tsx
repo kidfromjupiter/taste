@@ -4,7 +4,7 @@ export type Response = {
     next: string | URL;
     previous: string | URL;
 }
-export type Product = {
+export interface Product {
     collection: null | string;
     created_at: string;
     description: string;
@@ -17,4 +17,8 @@ export type Product = {
     name: string;
     stock: number;
     updated_at: string;
+}
+export interface ListProduct extends Product {
+    removeItem?: (itemId: string) => void;
+    simplified?: boolean;
 }

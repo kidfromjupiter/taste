@@ -5,26 +5,17 @@ import { HiOutlinePlus, HiOutlineMinus } from "react-icons/hi";
 import { AiOutlineDelete } from "react-icons/ai";
 import SpringContainer from "./SpringSquare";
 import useBorderRadiusBlob from "./hooks/useBorderRadiusBlob";
-
-type Props = {
-	name?: string;
-	id?: string;
-	img?: string;
-	price?: number;
-	category?: string;
-	removeItem?: (itemId: string) => void;
-	simplified?: boolean;
-};
+import { ListProduct } from "@/app/types";
 
 const ListProduct = ({
-	name = "Turmeric Powder",
-	id = "00000",
-	img = "https://picsum.com/200/200/",
-	price = 730,
-	category = "Daily Essentials",
+	name,
+	domestic_price,
+	domestic_price_currency,
 	removeItem,
+	id,
 	simplified = false,
-}: Props) => {
+	image,
+}: ListProduct) => {
 	const [blobStyles, _, __, ref] = useBorderRadiusBlob();
 
 	return (
@@ -32,7 +23,7 @@ const ListProduct = ({
 		<div className="flex border-b-gray-50 dark:border-neutral-800 border-b-2 px-3 items-center">
 			<div className="relative flex justify-center items-center mr-5" ref={ref}>
 				<div
-					style={{ backgroundImage: `url(${"/spicebottle.png"})` }}
+					style={{ backgroundImage: `url(${image})` }}
 					className=" h-24 w-24 bg-cover bg-center my-6 z-10"
 				></div>
 				<m.span
@@ -43,8 +34,8 @@ const ListProduct = ({
 			<div className="flex flex-col py-3 w-full dark:text-gray-50">
 				<div className="flex flex-col relative">
 					<div className="font-semibold text-lg">{name}</div>
-					<div className="text-sm text-slate-400 font-medium">{category}</div>
-					<div className="font-semibold">{price}Rs</div>
+					{/* <div className="text-sm text-slate-400 font-medium">{category}</div> */}
+					<div className="font-semibold">{parseFloat(domestic_price).toFixed(2)} {domestic_price_currency}</div>
 					{removeItem && (
 						<div
 							className="absolute top-0 right-0"

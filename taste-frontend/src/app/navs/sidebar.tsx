@@ -86,6 +86,7 @@ export default function SideBar() {
 	};
 	useEffect(() => {
 		const links = renderLinks();
+		//probably to reload after rendering links
 		setSidebarLinks(links);
 	}, [path]);
 
@@ -181,9 +182,8 @@ export default function SideBar() {
 								<div className="py-3 font-semibold px-2">Switch theme</div>
 								<div className="rounded-full bg-emerald-900 dark:bg-emerald-700 flex justify-center items-center">
 									<div
-										className={`p-2 m-1 rounded-full ${
-											theme != "dark" && "bg-emerald-800"
-										}`}
+										className={`p-2 m-1 rounded-full ${theme != "dark" && "bg-emerald-800"
+											}`}
 										onClick={() => {
 											dispatch(setTheme({ theme: Theme.LIGHT }));
 										}}
@@ -191,9 +191,8 @@ export default function SideBar() {
 										<BsSun size={22} />
 									</div>
 									<div
-										className={`p-2 m-1 rounded-full ${
-											theme == "dark" && "bg-emerald-800"
-										}`}
+										className={`p-2 m-1 rounded-full ${theme == "dark" && "bg-emerald-800"
+											}`}
 										onClick={() => {
 											dispatch(setTheme({ theme: Theme.DARK }));
 										}}
