@@ -15,4 +15,3 @@ export async function searchProducts(searchTerm: string) {
     const response = await axiosInstance.get('/products', { params: { search: searchTerm } });
     return response.data;
 }
-

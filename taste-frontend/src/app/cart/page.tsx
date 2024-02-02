@@ -1,6 +1,6 @@
 "use client";
 import ListProduct from "@/components/ListProduct";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	useMotionValue,
 	useSpring,
@@ -12,6 +12,8 @@ import { BsChevronDown } from "react-icons/bs";
 import SpringContainer from "@/components/SpringSquare";
 import useBorderRadiusBlob from "@/components/hooks/useBorderRadiusBlob";
 import FramerWrapper from "@/components/FramerWrapper";
+import { getCart } from "@/aux/fetch/authenticated_apis";
+import { CartItem, Product } from "../types";
 
 
 type Props = {};
@@ -22,6 +24,7 @@ const Cart = (props: Props) => {
 	const rotate = useMotionValue(0);
 	const ref = useRef<HTMLDivElement>(null);
 	const isInView = useInView(ref);
+	const [itemList, setItemList] = useState<any[]>([]);
 
 	useEffect(() => {
 		if (isInView) {
@@ -49,17 +52,22 @@ const Cart = (props: Props) => {
 	const rotateStyle = useSpring(rotate, {});
 	useEffect(() => {
 		// startBlob();
+		getCart().then((data) => {
+			setItemList(data); console.log(data);
+		});
+
+
 	}, []);
 
 	return (
 		<FramerWrapper>
 			<div className="w-full px-3  h-full overflow-auto mb-10 ">
-				{Array.from({ length: 10 }).map((_, i) => {
+				{itemList?.map((p: CartItem, i: number) => {
 					if (i == 9) {
 						return (
 							<div key={i} ref={ref}>
 								<ListProduct
-									// borderStyles={blobStyles}
+									{...p.product}
 									removeItem={() => console.log("remove item")}
 								/>
 							</div>
@@ -68,7 +76,7 @@ const Cart = (props: Props) => {
 					return (
 						<ListProduct
 							key={i}
-							// borderStyles={blobStyles}
+							{...p.product}
 							removeItem={() => console.log("remove item")}
 						/>
 					);

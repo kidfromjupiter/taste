@@ -5,8 +5,9 @@ import { BsCart } from "react-icons/bs";
 import { AnimationControls, m, useInView } from "framer-motion";
 import useBorderRadiusBlob from "./hooks/useBorderRadiusBlob";
 import { Product } from "@/app/types";
+import { addToCart } from "@/aux/fetch/authenticated_apis";
 
-const ProductCard = ({ image, name, domestic_price, domestic_price_currency }: Product) => {
+const ProductCard = ({ image, name, domestic_price, domestic_price_currency, id }: Product) => {
 	const [blobStyles, _, __, ref] = useBorderRadiusBlob();
 
 	return (
@@ -49,6 +50,7 @@ const ProductCard = ({ image, name, domestic_price, domestic_price_currency }: P
 						childrenHolderClassName=""
 						mouseDown={{ scale: 0.85 }}
 						touchStart={{ scale: 0.85 }}
+						touchEndCallback={() => { addToCart(id) }}
 					>
 						<HiOutlinePlus size={32} />
 					</SpringContainer>

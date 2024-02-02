@@ -22,3 +22,10 @@ export interface ListProduct extends Product {
     removeItem?: (itemId: string) => void;
     simplified?: boolean;
 }
+
+export interface CartItem {
+    id: number,
+    product: Product,
+    cart: number,
+    quantity: number,
+}
