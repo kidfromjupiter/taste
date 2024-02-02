@@ -88,32 +88,42 @@ const SearchPage = (props: Props) => {
 					</div>
 				</div>
 				<div
-					className="w-full grid-flow-row grid-cols-2 gap-3 px-3  h-full overflow-auto mb-5 "
+					className={`w-full grid-flow-row ${response && response.results.length > 0 ? 'grid-cols-2' : ''} gap-3 px-3  h-full overflow-auto mb-5 `}
 					style={{ display: listView ? "block" : "grid" }}
 					ref={ref}
 				>
-					{response?.results.map((p: Product, i: number) => {
-						return listView ?
-							<ListProduct
-								key={i}
-								{...p}
+					{response ?
+						response.results.length > 0 ? response.results.map((p: Product, i: number) => {
+							return listView ?
+								<ListProduct
+									key={i}
+									{...p}
 
-							/>
-							: <ProductCard
-								key={i}
-								{...p}
+								/>
+								: <ProductCard
+									key={i}
+									{...p}
 
-							/>;
-					})}
+								/>
+						}) : <div className=" flex justify-center flex-col items-center">
+							<div className=" text-center p-3">Looks like your search didn't return any products</div>
+							<div className=" text-center p-3 dark:text-neutral-500 text-neutral-400">Try searching for something else</div>
+							<div
+								className="w-60 h-60 p-10 bg-center bg-cover"
+								style={{ backgroundImage: `url('${"/confused_bear.png"}')` }}
+							></div>
+
+						</div> : null}
 				</div>
-				<SpringContainer
+				{response && response.next && response.results.length > 0 ? <SpringContainer
 					className=""
 					childrenHolderClassName="bg-black h-20 w-full text-white flex justify-center items-center"
 					touchEndCallback={loadNextPage}
 					enableHover={false}
 				>
 					<h3>Tap to load more</h3>
-				</SpringContainer>
+				</SpringContainer> : null}
+
 				<AnimatePresence>
 					{loading ? (
 						<motion.div
