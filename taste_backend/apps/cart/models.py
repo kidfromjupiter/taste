@@ -3,7 +3,7 @@ from django.db import models
 class CartItem(models.Model):
     product = models.OneToOneField('products.Product', on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
-    cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
+    cart = models.ForeignKey('Cart', on_delete=models.CASCADE,related_name='cartitems')
 
     def addtocart(self,quantity=1):
         """Add product to cart"""
@@ -46,9 +46,9 @@ class CartItem(models.Model):
 
 class Cart(models.Model):
     user = models.ForeignKey('custom_auth.User', on_delete=models.CASCADE)
-
+    
     def __str__(self):
-        return self.user.username
+        return self.user.email
     
     
 # Create your models here.

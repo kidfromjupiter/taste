@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets,status
 from rest_framework.response import Response
-from .serializers import CartSerializer,CartItemSerializer
+from .serializers import CartSerializer,CartItemSerializer,CartItemListSerializer
 from rest_framework.decorators import action
 from apps.custom_auth.models import User
 from .models import Cart,CartItem
@@ -13,10 +13,18 @@ class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all()
     permission_classes = [IsAuthenticated]
 
+
+    def list(self,request,*args,**kwargs):
+        # listing cart items of the user
+        cart = Cart.objects.get(user=request.user)
+        cartItems = CartItem.objects.filter(cart=cart)
+        return Response(status=status.HTTP_200_OK,data=CartItemListSerializer(cartItems,many=True).data)
+
     @action(detail=False,methods=['post'])
     def addtocart(self,request,*args,**kwargs):
         # creating cart if not exist. creating cart item from product
         cart,exists = Cart.objects.get_or_create(user=request.user)
+        #setting the cart pk in data to pass into serializer
         request.data['cart'] = cart.pk
         cartItem = CartItemSerializer(data=request.data)
         if cartItem.is_valid():
