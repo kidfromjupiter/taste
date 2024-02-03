@@ -1,5 +1,6 @@
 "use client";
 import ListProduct from "@/components/ListProduct";
+import CartItemListComponent from "@/components/CartListItem";
 import React, { useEffect, useRef, useState } from "react";
 import {
 	useMotionValue,
@@ -12,10 +13,10 @@ import { BsChevronDown } from "react-icons/bs";
 import SpringContainer from "@/components/SpringSquare";
 import useBorderRadiusBlob from "@/components/hooks/useBorderRadiusBlob";
 import FramerWrapper from "@/components/FramerWrapper";
-import { getCart } from "@/aux/fetch/authenticated_apis";
+import { getCart, removeFromCart, addToCart, decreaseQuantity } from "@/aux/fetch/authenticated_apis";
 import { CartItem, Product } from "../types";
 
-
+//TODO : add logic to determine the total price of cart items. or grab it from backend
 type Props = {};
 
 const Cart = (props: Props) => {
@@ -58,26 +59,38 @@ const Cart = (props: Props) => {
 
 
 	}, []);
-
+	const updateItemlist = (item: CartItem) => {
+		setItemList((prev) => {
+			const index = prev.findIndex((p) => p.id == item.id);
+			const newItems = [...prev];
+			newItems[index] = item;
+			return newItems;
+		});
+	}
 	return (
 		<FramerWrapper>
 			<div className="w-full px-3  h-full overflow-auto mb-10 ">
 				{itemList?.map((p: CartItem, i: number) => {
 					if (i == 9) {
 						return (
-							<div key={i} ref={ref}>
-								<ListProduct
-									{...p.product}
+							<div key={p.id} ref={ref}>
+								<CartItemListComponent
+									addToCart={() => addToCart(p.product.id).then(res => { updateItemlist(res) })}
+									decreaseQuantity={() => decreaseQuantity(p.id).then(res => { updateItemlist(res) })}
 									removeItem={() => console.log("remove item")}
+									{...p}
+
 								/>
 							</div>
 						);
 					}
 					return (
-						<ListProduct
-							key={i}
-							{...p.product}
+						<CartItemListComponent
+							addToCart={() => addToCart(p.product.id).then(res => { updateItemlist(res) })}
+							decreaseQuantity={() => decreaseQuantity(p.id).then(res => { updateItemlist(res) })}
+							key={p.id}
 							removeItem={() => console.log("remove item")}
+							{...p}
 						/>
 					);
 				})}

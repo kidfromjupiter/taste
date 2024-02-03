@@ -12,9 +12,11 @@ const ListProduct = ({
 	domestic_price,
 	domestic_price_currency,
 	removeItem,
-	id,
+	id, //product id
 	simplified = false,
 	image,
+	addToCart,
+	decreaseQuantity,
 }: ListProduct) => {
 	const [blobStyles, _, __, ref] = useBorderRadiusBlob();
 
@@ -55,6 +57,7 @@ const ListProduct = ({
 							childrenHolderClassName=""
 							mouseDown={{ scale: 0.85 }}
 							touchStart={{ scale: 0.85 }}
+							touchEndCallback={() => decreaseQuantity && decreaseQuantity()}
 						>
 							<HiOutlineMinus size={32} />
 						</SpringContainer>
@@ -66,6 +69,7 @@ const ListProduct = ({
 							childrenHolderClassName=""
 							mouseDown={{ scale: 0.85 }}
 							touchStart={{ scale: 0.85 }}
+							touchEndCallback={() => addToCart && addToCart()}
 						>
 							<HiOutlinePlus size={32} />
 						</SpringContainer>

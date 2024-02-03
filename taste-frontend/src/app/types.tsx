@@ -18,14 +18,25 @@ export interface Product {
     stock: number;
     updated_at: string;
 }
-export interface ListProduct extends Product {
-    removeItem?: (itemId: string) => void;
-    simplified?: boolean;
-}
+
 
 export interface CartItem {
     id: number,
     product: Product,
     cart: number,
     quantity: number,
+}
+
+export interface ListProduct extends Product {
+    removeItem?: (productId: string) => void;
+    simplified?: boolean;
+    addToCart?: () => void;
+    decreaseQuantity?: () => void;
+}
+
+export interface CartItemListComponentProps extends CartItem {
+    removeItem?: (productId: string) => void;
+    simplified?: boolean;
+    addToCart?: () => void;
+    decreaseQuantity?: () => void;
 }
