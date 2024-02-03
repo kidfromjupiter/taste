@@ -40,8 +40,10 @@ class CartViewSet(viewsets.ModelViewSet):
             request.data['cartItem'] = cartItem.pk
             self.increasequantity(request,*args,**kwargs)
             cartItem = CartItem.objects.get(product=request.data['product'],cart=cart)
-            return Response(status=status.HTTP_200_OK,data=CartItemSerializer(cartItem).data)
+            return Response(status=status.HTTP_200_OK,data=CartItemListSerializer(cartItem).data)
             
+    #shouldnt be exposed to the apis. only for internal use
+        
     @action(detail=False,methods=['post'])
     def increasequantity(self,request,*args,**kwargs):
         # increasing quantity of cart item
@@ -51,7 +53,7 @@ class CartViewSet(viewsets.ModelViewSet):
         
         cartItem.increase_quantity(request.data['quantity'] if 'quantity' in request.data else 1)
         
-        return Response(status=status.HTTP_200_OK,data=CartItemSerializer(cartItem).data)
+        return Response(status=status.HTTP_200_OK,data=CartItemListSerializer(cartItem).data)
     
     @action(detail=False,methods=['post'])
     def decreasequantity(self,request,*args,**kwargs):
@@ -63,7 +65,7 @@ class CartViewSet(viewsets.ModelViewSet):
         cartItem.decrease_quantity(request.data['quantity'] if 'quantity' in request.data else 1)
         if cartItem.id == None:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_200_OK,data=CartItemSerializer(cartItem).data)
+        return Response(status=status.HTTP_200_OK,data=CartItemListSerializer(cartItem).data)
     
     @action(detail=False,methods=['delete']) 
     def removefromcart(self,request,*args,**kwargs):

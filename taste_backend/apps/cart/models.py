@@ -44,6 +44,7 @@ class CartItem(models.Model):
         self.removefromcart()
         super().delete(*args, **kwargs)
 
+#TODO: add logic for total price
 class Cart(models.Model):
     user = models.ForeignKey('custom_auth.User', on_delete=models.CASCADE)
     
