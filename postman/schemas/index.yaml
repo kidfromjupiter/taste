@@ -1,0 +1,280 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'Taste API'
+  description: Taste E Commerce platform
+
+paths:
+  /products/all:
+    get:
+      summary: List all products
+      responses:
+        '200':
+          description: List all products from most recent first
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductList'
+        404:
+          description: 'No products yet'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /products/search?query={searchquery}:
+    get:
+      summary: Searching for a product
+      parameters:
+        - name: searchquery
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        200:
+          description: Return list of items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Productlist'
+        204:
+          description: No items found for search query
+  /products/{productId}:
+    get:
+      summary: Product page
+      parameters:
+        - name: productId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        200:
+          description: Returns Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product' 
+        404:
+          description: Product does not exist
+  /cart/addtocart/}:
+    summary: Adding items to cart.
+    
+    post:
+      requestBody:
+       $ref: '#/components/requestBodies/IncDecCartItem'
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: adding successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartItem'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  
+  /cart/increasequantity/:
+    summary: Increase the quantity of cart item
+    post: 
+      requestBody:
+        $ref: '#/components/requestBodies/IncDecCartItem'
+      responses:
+        '200':
+          description: increasing quantity successful
+          content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/CartItem'
+  /cart/decreasequantity/:
+    summary: decrease the quantity of cart item
+    post: 
+      requestBody:
+        $ref: '#/components/requestBodies/IncDecCartItem'
+      responses:
+        '200':
+          description: decreasing quantity successful
+          content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/CartItem'
+      
+  /account/{id}:
+    summary: User accounts API
+    parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+
+    get:
+      summary: Lists account information
+      responses:
+        200:
+          description: Account exists. Fetching successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInfo'
+        404:
+          description: Account does not exists
+          $ref: '#/components/schemas/Error'
+    patch:
+      summary: updates user data
+      
+
+components:
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  requestBodies:
+    IncDecCartItem:
+      description: Increase or decrease 
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              product: 
+                type: string  
+                description: product id of the item
+              quantity:
+                type: number
+                description: number of items you want to add/remove
+            
+      
+  schemas:
+    requestObj:
+      type: object
+      properties:
+        productId:
+          type: string
+        inc:
+          type: boolean 
+          description: True if increase
+        dec:
+          type: boolean
+          description: True if decrease
+    ProductList:
+      type: array
+      items:
+        type: object 
+        $ref: '#/components/schemas/Product'
+    Product:
+      type: object
+      properties:
+        id:
+          description: productId
+          type: string
+        imageUrl:
+          description: image url of product
+          type: string
+        productPageRedirectUrl:
+          description: url for the product
+          type: string
+        name:
+          type: string    
+    Address:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        addressLine3:
+          type: string
+        country:
+          type: string
+        postalCode:
+          type: string
+        city:
+          type: string
+    PaymentCard:
+      type: object
+      properties:
+        scheme:
+          description: VISA or Mastercard
+          type: string
+        last4:
+          description: last 4 digits of card number
+          type: number
+        expiry_month:
+          type: number
+        expiry_year:
+          type: number
+
+        
+    AccountInfo:
+      type: object
+      properties:
+        id:
+          description: Account Id
+          type: string
+        profilePicUrl:
+          description: User Profile Picture
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        customerId:
+          description: CustomerId from customer object
+          type: string
+        paymenentCards:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/PaymentCard'
+        address:
+          type: object
+          $ref: '#/components/schemas/Address'
+        
+      
+
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          description: A human readable error message
+          type: string
+
+
+    CartItem:
+      type: object
+      properties:
+        product:
+          type: object
+          $ref: '#/components/schemas/Product'
+        id:
+          type: number
+          description: cart item id
+        quantity:
+          type: number
+        cart: 
+          type: number
+          description: id of the cart
+
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-Api-Key
