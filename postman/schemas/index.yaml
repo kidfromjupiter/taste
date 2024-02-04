@@ -60,57 +60,52 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                $ref: '#/components/schemas/Product' 
         404:
           description: Product does not exist
-  /cart/items/{productId}:
-    summary: Cart related API.
-    parameters:
-      - name: productId
-        required: true
-        in: path
-        schema:
-          type: string
+  /cart/addtocart/}:
+    summary: Adding items to cart.
+    
     post:
-      description: adding to cart
-      security:
-        - BearerAuth: []
-      responses:
-        200:
-          description: successfully added to cart
-        401:
-          $ref: '#/components/responses/Unauthorized'
-    delete:
-      description: removing item from cart
-      security:
-        - BearerAuth: []
-      responses:
-        200:
-          description: OK
-        401:
-          $ref: '#/components/responses/Unauthorized'
-    put:
-      description: increment/decrement the quantity of product
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/requestObj'
+       $ref: '#/components/requestBodies/IncDecCartItem'
+      security:
+        - BearerAuth: []
       responses:
         200:
-          description: successfully changed quantity
+          description: adding successful
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  productId:
-                    type: string
-                  quantity:
-                    type: integer
+                $ref: '#/components/schemas/CartItem'
         401:
           $ref: '#/components/responses/Unauthorized'
+  
+  /cart/increasequantity/:
+    summary: Increase the quantity of cart item
+    post: 
+      requestBody:
+        $ref: '#/components/requestBodies/IncDecCartItem'
+      responses:
+        '200':
+          description: increasing quantity successful
+          content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/CartItem'
+  /cart/decreasequantity/:
+    summary: decrease the quantity of cart item
+    post: 
+      requestBody:
+        $ref: '#/components/requestBodies/IncDecCartItem'
+      responses:
+        '200':
+          description: decreasing quantity successful
+          content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/CartItem'
+      
   /account/{id}:
     summary: User accounts API
     parameters:
@@ -144,6 +139,22 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+
+  requestBodies:
+    IncDecCartItem:
+      description: Increase or decrease 
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              product: 
+                type: string  
+                description: product id of the item
+              quantity:
+                type: number
+                description: number of items you want to add/remove
+            
       
   schemas:
     requestObj:
@@ -241,6 +252,22 @@ components:
         message:
           description: A human readable error message
           type: string
+
+
+    CartItem:
+      type: object
+      properties:
+        product:
+          type: object
+          $ref: '#/components/schemas/Product'
+        id:
+          type: number
+          description: cart item id
+        quantity:
+          type: number
+        cart: 
+          type: number
+          description: id of the cart
 
 
   securitySchemes:
