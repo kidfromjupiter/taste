@@ -20,7 +20,4 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         user: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
-        command: |
-          cd taste/taste_backend/
-          git pull
-          python manage.py runserver 8000
+        command: echo 'hi'
