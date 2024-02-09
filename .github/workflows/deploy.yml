@@ -5,10 +5,10 @@ on:
     branches:
       - dev
   workflow_dispatch:
-runs-on: lasanslaptop
+
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: lasanlaptop
 
     steps:
     - name: Checkout code
