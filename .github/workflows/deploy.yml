@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: lasanlaptop
+    runs-on: self-hosted
 
     steps:
     - name: Checkout code
