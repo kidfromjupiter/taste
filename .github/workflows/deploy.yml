@@ -5,7 +5,7 @@ on:
     branches:
       - dev
   workflow_dispatch:
-
+runs-on: self-hosted
 jobs:
   deploy:
     runs-on: ubuntu-latest
