@@ -39,7 +39,7 @@ jobs:
             
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key $EC2_HOST@$EC2_USERNAME '
+          ssh -o StrictHostKeyChecking=no -i private_key $EC2_USERNAME@$EC2_HOST '
             ls -a
           '
         
