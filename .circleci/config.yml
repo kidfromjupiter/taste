@@ -8,7 +8,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh ec2-user@ec2-user@ec2-65-2-13-143.ap-south-1.compute.amazonaws.com "mkdir taste"
+            ssh ec2-user@ec2-65-2-13-143.ap-south-1.compute.amazonaws.com "mkdir taste"
 
 workflows:
   build-and-deploy:
