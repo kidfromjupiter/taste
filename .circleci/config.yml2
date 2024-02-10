@@ -1,0 +1,22 @@
+version: 2.1
+
+jobs:
+  deploy:
+    machine:
+      image: ubuntu-2204:2023.07.2
+    steps:
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh ec2-user@ec2-user@ec2-65-2-13-143.ap-south-1.compute.amazonaws.com "mkdir taste"
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build # only deploy once build job has completed
+          filters:
+            branches:
+              only: main # only deploy on the main branch
