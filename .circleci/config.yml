@@ -3,12 +3,15 @@ version: 2.1
 jobs:
   deploy:
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2204:current
     steps:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh ec2-user@ec2-65-2-13-143.ap-south-1.compute.amazonaws.com "mkdir taste"
+            ssh ec2-user@ec2-65-2-13-143.ap-south-1.compute.amazonaws.com "mkdir taste;
+            cd taste
+            git pull git@github.com:kidfromjupiter/taste.git
+            "
 
 workflows:
   build-and-deploy:
