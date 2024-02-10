@@ -9,9 +9,10 @@ jobs:
           name: Deploy Over SSH
           command: |
             ssh ec2-user@ec2-65-2-13-143.ap-south-1.compute.amazonaws.com "
-            source deploy/bin/activate.sh;
+            source deploy/bin/activate;
             cd taste;
             git pull git@github.com:kidfromjupiter/taste.git;
+            git checkout dev
             pip install -r requirements.txt;
             cd taste_backend;
             python manage.py runserver 8000;
