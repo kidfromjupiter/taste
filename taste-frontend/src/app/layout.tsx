@@ -36,24 +36,19 @@ export default function Layout({
 	}, []);
 
 	return (
-		<html lang="en" style={{ height: "100%" }}>
-			<body className=" min-h-full margin-0 dark:bg-neutral-900 dark:text-gray-50">
-				<div className=" ">
-					<Provider store={store}>
-						<ProSidebarProvider>
-							<div className="flex-col md:flex-row flex ">
-								<SideBar />
-
-								<div className="w-full mt-14">
-									<AnimatePresence mode="wait" initial={false}>
-										{children}
-									</AnimatePresence>
-									<MessageLayer />
-								</div>
-							</div>
-						</ProSidebarProvider>
-					</Provider>
-				</div>
+		<html lang="en">
+			<body className=" min-h-screen margin-0 dark:bg-neutral-900 dark:text-gray-50">
+				<Provider store={store}>
+					<div className="grid grid-flow-row md:grid-cols-[200px_auto] min-h-screen overflow-y-auto overflow-x-hidden">
+						<SideBar />
+						<div className="flex xl:px-24 mt-10 justify-center items-center px-5 ">
+							<AnimatePresence mode="wait" initial={false}>
+								{children}
+							</AnimatePresence>
+							<MessageLayer />
+						</div>
+					</div>
+				</Provider>
 			</body>
 		</html>
 	);

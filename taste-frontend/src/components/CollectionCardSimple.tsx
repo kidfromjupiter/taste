@@ -13,7 +13,7 @@ const CollectionCardSimple = ({ imgUrl, url, title }: Props) => {
 	return (
 		<SpringContainer
 			className="rounded-lg "
-			childrenHolderClassName=" p-0 relative  h-48 w-48 overflow-hidden rounded-lg"
+			childrenHolderClassName=" p-0 relative  h-48  overflow-hidden rounded-lg"
 		>
 			<div className="absolute top-0 right-0">
 				<Image

@@ -24,7 +24,7 @@ const SearchBar = ({
 	}));
 
 	return (
-		<animated.div className="w-full" style={styles}>
+		<animated.div className="" style={styles}>
 			<input
 				value={text}
 				onChange={(e) => {
@@ -35,8 +35,6 @@ const SearchBar = ({
 					if (e.key == "Backspace") {
 						return api.start({ scale: 0.975 });
 					}
-
-
 				}}
 				onKeyUp={(e) => {
 					if (e.key == "Backspace") {
@@ -48,7 +46,6 @@ const SearchBar = ({
 				}}
 				className={`bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3 ${className}`}
 				placeholder={placeholder}
-
 			/>
 		</animated.div>
 	);
