@@ -1,7 +1,10 @@
-import { FiSettings } from "react-icons/fi";
-import { AiOutlineHome, AiOutlineAppstore } from "react-icons/ai";
+import {
+	AiOutlineHome,
+	AiOutlineAppstore,
+	AiOutlineUser,
+	AiOutlineShoppingCart,
+} from "react-icons/ai";
 import { TbTruckDelivery } from "react-icons/tb";
-import { BsBoxSeam } from "react-icons/bs";
 import { ReactNode } from "react";
 type sidebarMeta = {
 	title: string;
@@ -21,15 +24,18 @@ export const urls: Record<string, sidebarMeta> = {
 	},
 	"/orders": {
 		title: "Orders",
-		sidebar: false,
+		sidebar: true,
+		icon: <TbTruckDelivery size={25} />,
 	},
 	"/cart": {
 		title: "Cart",
-		sidebar: false,
+		sidebar: true,
+		icon: <AiOutlineShoppingCart size={25} />,
 	},
 	"/account": {
 		title: "Account",
-		sidebar: false,
+		sidebar: true,
+		icon: <AiOutlineUser size={25} />,
 	},
 	"/comingsoon": {
 		title: "Coming Soon",

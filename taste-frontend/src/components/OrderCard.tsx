@@ -37,7 +37,7 @@ const OrderCard = ({ date, eta, cancelled, price, items, id }: Props) => {
 					<ul className=" list-disc mb-2">
 						<li>ETA: {eta}</li>
 					</ul>
-					<div className="text-gray-400 max-h-12 text-ellipsis overflow-hidden whitespace-nowrap ">
+					<div className="text-gray-400 max-h-6 overflow-hidden text-ellipsis ">
 						{items.map((item) => {
 							return ` ${item.name} (${item.quantity}),`;
 						})}

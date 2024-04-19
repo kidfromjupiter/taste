@@ -3,10 +3,8 @@ import { ReactElement, ReactNode, useState, useEffect } from "react";
 import { urls } from "@/aux/urlResolver";
 import { usePathname, useRouter } from "next/navigation";
 import { AiOutlineSetting } from "react-icons/ai";
-import Link from "next/link";
 import { FiChevronLeft } from "react-icons/fi";
 import { CgMenuLeft } from "react-icons/cg";
-import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
 import { AnimatePresence } from "framer-motion";
 import firebase from "firebase/compat/app";
 import { useSelector, useDispatch } from "react-redux";
@@ -20,7 +18,6 @@ import MobilePrefMenu from "./mobilePrefMenu";
 
 export default function SideBar() {
 	// const { collapseSidebar, toggleSidebar, collapsed } = useProSidebar();
-	const [sidebarLinks, setSidebarLinks] = useState<ReactNode[] | null>(null);
 	const [currentpathName, setCurrentpathName] = useState("");
 	const [backButtonShown, setBackButtonShown] = useState(false);
 	const [prefOpen, setPrefOpen] = useState(false);
@@ -28,62 +25,7 @@ export default function SideBar() {
 	const router = useRouter();
 	const path = usePathname();
 	const theme = useSelector((state: any) => state.theme.theme);
-	const bgColor = theme === Theme.DARK ? "#064e3b" : "#047857";
-	const renderLinks = () => {
-		let links: Array<ReactElement> = [];
-		let homeIndex: number = 0;
-		for (const key in urls) {
-			if (urls[key].sidebar === true) {
-				if (path !== null && path.includes(key)) {
-					setCurrentpathName(urls[key].title);
-					if (path.split("/").length > 2) {
-						setBackButtonShown(true);
-					}
-
-					if (key === "/") {
-						links.push(
-							<MenuItem
-								component={<Link href={key} />}
-								icon={urls[key].icon}
-								key={key}
-							>
-								{urls[key].title}
-							</MenuItem>
-						);
-					} else {
-						links.push(
-							<MenuItem
-								active
-								icon={urls[key].icon}
-								component={<Link href={key} />}
-								key={key}
-							>
-								{urls[key].title}
-							</MenuItem>
-						);
-					}
-				} else {
-					links.push(
-						<MenuItem
-							component={<Link href={key} />}
-							icon={urls[key].icon}
-							key={key}
-						>
-							{urls[key].title}
-						</MenuItem>
-					);
-				}
-			} else {
-				if (path !== null && path.includes(key)) {
-					setCurrentpathName(urls[key].title);
-					if (path.split("/").length > 2) {
-						setBackButtonShown(true);
-					}
-				}
-			}
-		}
-		return links;
-	};
+	const [sidebarOpen, setSidebarOpen] = useState(false);
 
 	const dispatch = useDispatch();
 	const signOut = () => {
@@ -116,143 +58,97 @@ export default function SideBar() {
 	}, [theme]);
 
 	return (
-		// <div className="relative">
-		// 	<Sidebar
-		// 		className=" text-gray-100  font-medium bg-emerald-700 dark:bg-emerald-900 relative "
-		// 		width="300px"
-		// 		breakPoint="md"
-		// 		backgroundColor={bgColor}
-		// 		defaultCollapsed={false}
-		// 	>
-		// 		<Menu
-		// 			className="bg-emerald-700 pb-5 mt-5 dark:bg-emerald-900"
-		// 			closeOnClick={true}
-		// 			menuItemStyles={{
-		// 				button: ({ level, active, disabled }) => {
-		// 					if (level === 0)
-		// 						return {
-		// 							backgroundColor: active ? "#059669" : undefined,
-		// 							// borderRadius: "0.5rem",
-		// 							boxShadow: active ? "0 4px 17px 0.1rem #05A875" : "initial",
-		// 							"&:hover": {
-		// 								backgroundColor: active ? "#059669" : "unset",
-		// 							},
-		// 						};
-		// 				},
-		// 			}}
-		// 		>
-		// 			{sidebarLinks?.map((element: ReactNode) => {
-		// 				return element;
-		// 			})}
-		// 		</Menu>
-		// 		<Menu
-		// 			className="mt-5 absolute bottom-0"
-		// 			menuItemStyles={{
-		// 				button: ({ level, active, disabled }) => {
-		// 					if (level === 0)
-		// 						return {
-		// 							"&:hover": {
-		// 								backgroundColor: "unset",
-		// 							},
-		// 						};
-		// 				},
-		// 			}}
-		// 		>
-		// 			<MenuItem
-		// 				icon={
-		// 					theme != "dark" && collapsed == true ? (
-		// 						<BsSun size={22} />
-		// 					) : collapsed == true ? (
-		// 						<BsMoon size={22} />
-		// 					) : null
-		// 				}
-		// 				onClick={() =>
-		// 					theme == "dark"
-		// 						? dispatch(setTheme({ theme: Theme.LIGHT }))
-		// 						: dispatch(setTheme({ theme: Theme.DARK }))
-		// 				}
-		// 			>
-		// 				{!collapsed && (
-		// 					<div className="h-16 flex flex-row items-center justify-between">
-		// 						<div className="py-3 font-semibold px-2">Switch theme</div>
-		// 						<div className="rounded-full bg-emerald-900 dark:bg-emerald-700 flex justify-center items-center">
-		// 							<div
-		// 								className={`p-2 m-1 rounded-full ${theme != "dark" && "bg-emerald-800"
-		// 									}`}
-		// 								onClick={() => {
-		// 									dispatch(setTheme({ theme: Theme.LIGHT }));
-		// 								}}
-		// 							>
-		// 								<BsSun size={22} />
-		// 							</div>
-		// 							<div
-		// 								className={`p-2 m-1 rounded-full ${theme == "dark" && "bg-emerald-800"
-		// 									}`}
-		// 								onClick={() => {
-		// 									dispatch(setTheme({ theme: Theme.DARK }));
-		// 								}}
-		// 							>
-		// 								<BsMoon size={22} />
-		// 							</div>
-		// 						</div>
-		// 					</div>
-		// 				)}
-		// 			</MenuItem>
-		// 			<MenuItem
-		// 				icon={<CgMenuLeft size={30} />}
-		// 				component={<div onClick={() => collapseSidebar()} />}
-		// 			>
-		// 				{collapsed ? null : <div className=" ">Collapse</div>}
-		// 			</MenuItem>
-		// 		</Menu>
-		// 	</Sidebar>
-		// 	<div className="py-3 px-2 md:hidden flex flex-row items-center  z-50 bg-white border-b-slate-100 border-b-2 fixed w-full dark:bg-neutral-900 dark:border-b-neutral-800 dark:text-gray-50">
-		// 		<div className="flex flex-row justify-center items-center">
-		// 			{backButtonShown ? (
-		// 				<div className="pr-2" onClick={() => router.back()}>
-		// 					<FiChevronLeft size={28} />
-		// 				</div>
-		// 			) : null}
+		//
+		<>
+			<div
+				className={`${
+					sidebarOpen ? "translate-x-0" : "-translate-x-60"
+				}  transition-all md:translate-x-0  absolute px-3 py-5 md:relative md:flex flex-col justify-between h-screen  border-r-[1px] border-neutral-100 dark:border-neutral-700 z-50 dark:bg-neutral-900 bg-neutral-50`}
+			>
+				<div className="flex flex-col justify-between h-full">
+					<div className="grid grid-flow-row gap-2">
+						{Object.keys(urls).map((url) => {
+							if (urls[url].sidebar) {
+								return (
+									<div
+										key={url}
+										className={`${
+											path == url ? "dark:bg-neutral-700 bg-neutral-100" : ""
+										} py-3 pl-3 pr-7 flex hover:cursor-pointer hover:bg-neutral-200 rounded-md
+								dark:hover:bg-neutral-800 dark:text-gray-50`}
+										onClick={() => router.push(url)}
+									>
+										{urls[url].sidebar && (
+											<div className="px-3">{urls[url].icon}</div>
+										)}
 
-		// 			<div onClick={() => toggleSidebar()}>
-		// 				<CgMenuLeft size={34} />
-		// 			</div>
-		// 		</div>
-		// 		<div className="px-3 font-medium text-xl flex-1 text-center">
-		// 			{currentpathName}
-		// 		</div>
-		// 		<div
-		// 			className="text-slate-700 dark:text-gray-50"
-		// 			onClick={() => setPrefOpen(!prefOpen)}
-		// 		>
-		// 			<AiOutlineSetting size={34} />
-		// 		</div>
-		// 	</div>
-		// 	<AnimatePresence>
-		// 		{prefOpen ? (
-		// 			MobilePrefMenu({ signOut, user, setPrefOpen })
-		// 		) : null}
-		// 	</AnimatePresence>
-		// </div>
-		<div className="px-3 py-5">
-			{Object.keys(urls).map((url) => {
-				if (urls[url].sidebar) {
-					return (
-						<div
-							key={url}
-							className="py-3 flex hover:cursor-pointer"
-							onClick={() => router.push(url)}
-						>
-							{urls[url].sidebar && (
-								<div className="px-3">{urls[url].icon}</div>
-							)}
-
-							<div>{urls[url].title}</div>
+										<div>{urls[url].title}</div>
+									</div>
+								);
+							}
+							return null;
+						})}
+					</div>
+					<div>
+						<div className=" flex flex-col items-center justify-between">
+							<div className="py-3 font-semibold px-2">Switch theme</div>
+							<div className="rounded-full  dark:bg-neutral-700 flex justify-center items-center">
+								<div
+									className={`p-2 m-1 rounded-full ${
+										theme != "dark" && "bg-neutral-300"
+									}`}
+									onClick={() => {
+										dispatch(setTheme({ theme: Theme.LIGHT }));
+									}}
+								>
+									<BsSun size={22} />
+								</div>
+								<div
+									className={`p-2 m-1 rounded-full ${
+										theme == "dark" && "bg-neutral-800"
+									}`}
+									onClick={() => {
+										dispatch(setTheme({ theme: Theme.DARK }));
+									}}
+								>
+									<BsMoon size={22} />
+								</div>
+							</div>
 						</div>
-					);
-				}
-				return null;
-			})}
-		</div>
+					</div>
+				</div>
+			</div>
+			<div
+				onClick={() => setSidebarOpen(false)}
+				className={`${
+					sidebarOpen ? "block" : "hidden"
+				} md:hidden transition-all bg-black opacity-60 h-screen w-screen absolute z-40 m-auto`}
+			></div>
+			<div className="py-3 px-2 md:hidden flex flex-row items-center h-16  z-30 bg-white border-b-slate-100 border-b-2 fixed w-full dark:bg-neutral-900 dark:border-b-neutral-800 dark:text-gray-50">
+				<div className="flex flex-row justify-center items-center">
+					{backButtonShown ? (
+						<div className="pr-2" onClick={() => router.back()}>
+							<FiChevronLeft size={28} />
+						</div>
+					) : null}
+
+					<div onClick={() => setSidebarOpen(!sidebarOpen)}>
+						<CgMenuLeft size={34} />
+					</div>
+				</div>
+				<div className="px-3 font-medium text-xl flex-1 text-center">
+					{currentpathName}
+				</div>
+				<div
+					className="text-slate-700 dark:text-gray-50"
+					onClick={() => setPrefOpen(!prefOpen)}
+				>
+					<AiOutlineSetting size={34} />
+				</div>
+			</div>
+			<AnimatePresence>
+				{prefOpen ? MobilePrefMenu({ signOut, user, setPrefOpen }) : null}
+			</AnimatePresence>
+		</>
 	);
 }

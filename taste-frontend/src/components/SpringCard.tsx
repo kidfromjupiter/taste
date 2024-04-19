@@ -35,13 +35,15 @@ const SpringCard = ({ hideCallback, title }: Props) => {
 				</div>
 				<div className="h-full w-full overflow-auto">
 					{Array.from({ length: 10 }).map((_, i) => (
+						//@ts-ignore
+						//TODO: Fix this
 						<ListProduct
 							key={i}
 							name="Turmeric Powder"
-							price={300}
+							domestic_price={"300"}
 							id=""
-							category=" Daily Essentials"
 							simplified={true}
+							domestic_price_currency="LKR"
 						/>
 					))}
 				</div>

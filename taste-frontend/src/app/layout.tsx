@@ -39,11 +39,11 @@ export default function Layout({
 		<html lang="en">
 			<body className=" min-h-screen margin-0 dark:bg-neutral-900 dark:text-gray-50">
 				<Provider store={store}>
-					<div className="grid grid-flow-row md:grid-cols-[200px_auto] min-h-screen overflow-y-auto overflow-x-hidden">
+					<div className="grid grid-flow-row md:grid-cols-[200px_auto] min-h-screen h-screen">
 						<SideBar />
-						<div className="flex xl:px-24 mt-10 justify-center items-center px-5 ">
+						<div className="flex xl:px-24  justify-center px-5 overflow-y-auto">
 							<AnimatePresence mode="wait" initial={false}>
-								{children}
+								<div className="mt-16 md:mt-0">{children}</div>
 							</AnimatePresence>
 							<MessageLayer />
 						</div>
