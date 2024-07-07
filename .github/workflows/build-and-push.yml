@@ -36,6 +36,6 @@ jobs:
           context: ./taste-frontend
           dockerfile: taste-frontend/Dockerfile
           build-args: |
-            NEXT_PUBLIC_API_BASEURL=taste.lasan.digital
+            NEXT_PUBLIC_API_BASEURL=https://taste.lasan.digital/api
           push: true
           tags: kidfromjupiter/personal:taste-frontend
