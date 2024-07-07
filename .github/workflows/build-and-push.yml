@@ -25,8 +25,8 @@ jobs:
       - name: Build and push Django image
         uses: docker/build-push-action@v2
         with:
-          context: ./taste-backend
-          dockerfile: taste-backend/Dockerfile
+          context: ./taste_backend
+          dockerfile: taste_backend/Dockerfile
           push: true
           tags: kidfromjupiter/personal:taste-backend
 
