@@ -16,4 +16,4 @@ RUN python manage.py migrate --settings=taste_backend.settings.dev
 
 EXPOSE 5001
 
-CMD ["gunicorn","taste_backend.asgi:application","-b","0.0.0.0:5001"]
+CMD ["gunicorn","taste_backend.wsgi:application","-b","0.0.0.0:5001"]

@@ -11,6 +11,4 @@ services:
     image: kidfromjupiter/personal:taste-frontend
     ports:
       - "5000:5000"
-    build-args: |
-      NEXT_PUBLIC_API_URL=https://taste.lasan.digital/api
     restart: unless-stopped
