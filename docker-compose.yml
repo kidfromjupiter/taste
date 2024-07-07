@@ -1,6 +1,6 @@
 services:
   django:
-    image: kidfromjupiter/portfolio:taste-backend
+    image: kidfromjupiter/personal:taste-backend
     ports:
       - "5001:5001"
     environment:
@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
 
   nextjs:
-    image: kidfromjupiter/portfolio:taste-frontend
+    image: kidfromjupiter/personal:taste-frontend
     ports:
       - "5000:5000"
     restart: unless-stopped

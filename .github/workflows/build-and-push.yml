@@ -28,7 +28,7 @@ jobs:
           context: ./taste-backend
           dockerfile: taste-backend/Dockerfile
           push: true
-          tags: kidfromjupiter/portfolio:taste-backend
+          tags: kidfromjupiter/personal:taste-backend
 
       - name: Build and push Next.js image
         uses: docker/build-push-action@v2
@@ -38,4 +38,4 @@ jobs:
           build-args: |
             NEXT_PUBLIC_API_BASEURL=taste.lasan.digital
           push: true
-          tags: kidfromjupiter/portfolio:taste-frontend
+          tags: kidfromjupiter/personal:taste-frontend
