@@ -44,7 +44,7 @@ const SearchBar = ({
 						onEnter?.(text);
 					}
 				}}
-				className={`bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3 ${className}`}
+				className={` bg-gray-100 placeholder-slate-400 outline-none ring-0 rounded-full w-full px-10 py-3 ${className}`}
 				placeholder={placeholder}
 			/>
 		</animated.div>

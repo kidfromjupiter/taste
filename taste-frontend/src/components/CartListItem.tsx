@@ -1,11 +1,10 @@
-import { AnimationControls, m, useInView } from "framer-motion";
-import React, { useEffect, useRef } from "react";
-import RippleCard from "./RippleCard";
 import { HiOutlinePlus, HiOutlineMinus } from "react-icons/hi";
 import { AiOutlineDelete } from "react-icons/ai";
 import SpringContainer from "./SpringSquare";
 import useBorderRadiusBlob from "./hooks/useBorderRadiusBlob";
 import { CartItemListComponentProps, ListProduct } from "@/app/types";
+import { m } from "framer-motion";
+import { useRef, useState } from "react";
 
 const CartItemListComponent = ({
     removeItem,
@@ -16,7 +15,31 @@ const CartItemListComponent = ({
     decreaseQuantity,
 }: CartItemListComponentProps) => {
     const [blobStyles, _, __, ref] = useBorderRadiusBlob();
+    const [_quantity, setquantity] = useState(quantity)
 
+    const quantityTimer = useRef(null)
+    const _increaseQuantity = async () =>{
+      setquantity(_quantity +1)
+      if (quantityTimer.current) {
+        clearTimeout(quantityTimer.current)
+      }
+      quantityTimer.current = setTimeout(() => {
+         addToCart?.(); 
+      }, 200);
+
+
+    }
+    const _decreaseQuantity = async () =>{
+      setquantity(_quantity -1)
+      if (quantityTimer.current) {
+        clearTimeout(quantityTimer.current)
+      }
+      quantityTimer.current = setTimeout(() => {
+         addToCart?.(); 
+      }, 200);
+
+
+    }
     return (
         // <RippleCard onClickAction={() => {}}>
         <div className="flex border-b-gray-50 dark:border-neutral-800 border-b-2 px-3 items-center">
@@ -53,19 +76,19 @@ const CartItemListComponent = ({
                         childrenHolderClassName=""
                         mouseDown={{ scale: 0.85 }}
                         touchStart={{ scale: 0.85 }}
-                        touchEndCallback={() => decreaseQuantity && decreaseQuantity()}
+                        touchEndCallback={() => _decreaseQuantity()}
                     >
                         <HiOutlineMinus size={32} />
                     </SpringContainer>
                     <div className="text-white bg-emerald-700 rounded-md py-2 px-5 flex justify-center items-center ">
-                        <div>300gx{quantity}</div>
+                        <div>300gx{_quantity}</div>
                     </div>
                     <SpringContainer
                         className="bg-gray-200 text-slate-700 rounded-md py-2 px-2 mx-2 dark:bg-neutral-600 dark:text-gray-50 "
                         childrenHolderClassName=""
                         mouseDown={{ scale: 0.85 }}
                         touchStart={{ scale: 0.85 }}
-                        touchEndCallback={() => addToCart && addToCart()}
+                        touchEndCallback={() =>_increaseQuantity()}
                     >
                         <HiOutlinePlus size={32} />
                     </SpringContainer>

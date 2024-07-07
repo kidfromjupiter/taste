@@ -1,0 +1,14 @@
+services:
+  django:
+    image: kidfromjupiter/portfolio:taste-backend
+    ports:
+      - "5001:5001"
+    environment:
+      DJANGO_SETTINGS_MODULE: taste_backend.settings.dev
+    restart: unless-stopped
+
+  nextjs:
+    image: kidfromjupiter/portfolio:taste-frontend
+    ports:
+      - "5000:5000"
+    restart: unless-stopped

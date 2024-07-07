@@ -18,13 +18,12 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     
-    def decrease_stock(self,quantity=1):
+    def decrease_stock_by(self,quantity=1):
         """Decrease stock of product"""
-        if self.stock - quantity >= 0:
-            self.stock -= quantity
-            self.save()
+        self.stock = max(0,self.stock - quantity)
+        self.save()
     
-    def increase_stock(self,quantity=1):
+    def increase_stock_by(self,quantity=1):
         """Increase stock of product"""
         self.stock += quantity
         self.save()

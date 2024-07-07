@@ -20,7 +20,7 @@ export default function Page() {
 			<div className="flex flex-col px-3 dark:bg-neutral-900 h-screen">
 				<div className="py-3 md:py-10 ">
 					<SearchBar
-						className="dark:bg-zinc-800 text-white"
+						className="dark:bg-zinc-800 dark:text-white"
 						onEnter={(searchtext) => {
 							router.push(`/search?query=${searchtext}`);
 						}}

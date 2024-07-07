@@ -1,55 +1,29 @@
 from django.db import models
+from djmoney.models.fields import MoneyField
+from djmoney.money import Money
 
 class CartItem(models.Model):
     product = models.OneToOneField('products.Product', on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
+    quantity = models.IntegerField(default=0)
     cart = models.ForeignKey('Cart', on_delete=models.CASCADE,related_name='cartitems')
-
-    def addtocart(self,quantity=1):
-        """Add product to cart"""
-
-        self.product.decrease_stock(quantity=quantity)
-        if self.quantity - quantity <= 0:
-            self.quantity = quantity
-    
-    def decrease_quantity(self,quantity=1):
-        """Reduce quantity of product in cart"""
-
-        if self.quantity - quantity <= 0:
-            self.delete()
-        else:
-        # increasing product stock
-            self.quantity -= quantity
-            self.product.increase_stock(quantity=quantity)
-            self.save()
-    
-    def increase_quantity(self,quantity=1):
-        """Increase quantity of product in cart"""
-        if self.product.stock - quantity < 0:
-            self.quantity = self.product.stock
-        else:
-        # reducing product stock
-            self.quantity += quantity
-            self.product.decrease_stock(quantity=quantity)
-        self.save()
-
-    def removefromcart(self):
-        """Remove product from cart"""
-        self.product.increase_stock(self.quantity)
-    
-    def save(self,*args, **kwargs):
-        super().save(*args, **kwargs)
-
-    def delete(self,*args, **kwargs):
-        self.removefromcart()
-        super().delete(*args, **kwargs)
 
 #TODO: add logic for total price
 class Cart(models.Model):
     user = models.ForeignKey('custom_auth.User', on_delete=models.CASCADE)
-    
+    value = MoneyField(max_digits=14, decimal_places=3, default_currency='LKR',default=Money("0",'LKR'))
     def __str__(self):
         return self.user.email
+    def get_total(self):
+        value = Money("0","LKR")
+        if self.pk != None:
+            #the case where i cant use this relationship when the cart object is created
+            for cartItem in self.cartitems.all():
+                value += cartItem.product.domestic_price * cartItem.quantity
+        return value
+    def save(self,*args,**kwargs) :
+        self.value = self.get_total()
+        super().save(*args,**kwargs)
+        # super().save(*args,**kwargs)
     
     
 # Create your models here.

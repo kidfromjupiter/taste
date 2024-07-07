@@ -1,0 +1,41 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Django image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./taste-backend
+          dockerfile: taste-backend/Dockerfile
+          push: true
+          tags: kidfromjupiter/portfolio:taste-backend
+
+      - name: Build and push Next.js image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./taste-frontend
+          dockerfile: taste-frontend/Dockerfile
+          build-args: |
+            NEXT_PUBLIC_API_BASEURL=taste.lasan.digital
+          push: true
+          tags: kidfromjupiter/portfolio:taste-frontend

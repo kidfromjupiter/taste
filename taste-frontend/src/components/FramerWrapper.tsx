@@ -3,9 +3,10 @@ import React, { useEffect, useRef } from "react";
 import { FeatureBundle } from "framer-motion";
 type Props = {
 	children: React.ReactNode;
+  className?:string;
 };
 
-const FramerWrapper = ({ children }: Props) => {
+const FramerWrapper = ({className, children }: Props) => {
 	const ref = useRef<HTMLDivElement>(null);
 
 	return (
@@ -23,7 +24,11 @@ const FramerWrapper = ({ children }: Props) => {
 				onAnimationComplete={() =>
 					window.scrollTo({ top: 0, behavior: "smooth" })
 				}
+        style={{width:'inherit'}}
+        className={className}
 			>
+
+
 				{children}
 			</m.div>
 		</LazyMotion>

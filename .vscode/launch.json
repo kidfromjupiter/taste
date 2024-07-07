@@ -5,11 +5,31 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "chrome",
+            "name": "Test",
+            "type": "debugpy",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:8080",
-            "webRoot": "${workspaceFolder}"
-        }
+            "args": [
+                "test",
+                // "--settings=taste_backend.settings.dev"
+
+            ],
+            "env": {"DJANGO_SETTINGS_MODULE":"taste_backend.settings.dev" },
+            "django": true,
+            "autoStartBrowser": false,
+            "program": "${workspaceFolder}/taste_backend/manage.py",
+            "cwd": "${workspaceFolder}/taste_backend"
+        },
+        {
+            "name": "Launch",
+            "type": "debugpy",
+            "request": "launch",
+            "args": [
+                "runserver",
+                "--settings=taste_backend.settings.dev"
+            ],
+            "django": true,
+            "autoStartBrowser": false,
+            "program": "${workspaceFolder}/taste_backend/manage.py"
+        },
     ]
 }

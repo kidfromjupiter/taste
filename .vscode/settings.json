@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "openapi:v3": "file:///home/lasan/Dev/taste/postman/schemas/index.yaml"
+    }
+}

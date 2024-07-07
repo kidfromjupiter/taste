@@ -43,7 +43,7 @@ export default function Layout({
 						<SideBar />
 						<div className="flex xl:px-24  justify-center px-5 overflow-y-auto">
 							<AnimatePresence mode="wait" initial={false}>
-								<div className="mt-16 md:mt-0">{children}</div>
+								<div className="mt-16 md:mt-0 flex w-full">{children}</div>
 							</AnimatePresence>
 							<MessageLayer />
 						</div>

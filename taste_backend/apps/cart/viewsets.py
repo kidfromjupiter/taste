@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from rest_framework import viewsets,status
 from rest_framework.response import Response
+
+from apps.products.models import Product
 from .serializers import CartSerializer,CartItemSerializer,CartItemListSerializer
 from rest_framework.decorators import action
 from apps.custom_auth.models import User
@@ -17,63 +19,62 @@ class CartViewSet(viewsets.ModelViewSet):
     def list(self,request,*args,**kwargs):
         # listing cart items of the user
         cart = Cart.objects.get(user=request.user)
-        cartItems = CartItem.objects.filter(cart=cart)
-        return Response(status=status.HTTP_200_OK,data=CartItemListSerializer(cartItems,many=True).data)
+        return Response(status=status.HTTP_200_OK,data=CartSerializer(cart).data)
 
+    
     @action(detail=False,methods=['post'])
     def addtocart(self,request,*args,**kwargs):
         # creating cart if not exist. creating cart item from product
-        cart,exists = Cart.objects.get_or_create(user=request.user)
-        #setting the cart pk in data to pass into serializer
-        request.data['cart'] = cart.pk
-        cartItem = CartItemSerializer(data=request.data)
-        if cartItem.is_valid():
-            try:
-                cartItem.save()
-                cartItem.instance.addtocart(quantity=request.data['quantity'] if 'quantity' in request.data else 1)
-                return Response(status=status.HTTP_200_OK,data=cartItem.data)
-            except:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-        #cart item already exists
-        else:
-            cartItem = CartItem.objects.get(product=request.data['product'],cart=cart)
-            request.data['cartItem'] = cartItem.pk
-            self.increasequantity(request,*args,**kwargs)
-            cartItem = CartItem.objects.get(product=request.data['product'],cart=cart)
-            return Response(status=status.HTTP_200_OK,data=CartItemListSerializer(cartItem).data)
+        try:
+            cart,created = Cart.objects.get_or_create(user=request.user)
+            #setting the cart pk in data to pass into serializer
+            request.data['cart'] = cart.pk
+            cartItem = CartItemSerializer(data=request.data,partial=True)
+            productInDB = Product.objects.get(pk=cartItem.initial_data['product'])
+            #quantity cannot be larger than what is available. 
+            request.data['quantity'] = min(productInDB.stock,request.data['quantity'])
+
+            if cartItem.is_valid():
+                try:
+                    item = cartItem.save()
+                    productInDB.decrease_stock_by(item.quantity)
+                    return Response(status=status.HTTP_200_OK,data=cartItem.data)
+                except:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                print('isnt valid')
+                return Response(status=status.HTTP_400_BAD_REQUEST,data=cartItem.errors)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
             
-    #shouldnt be exposed to the apis. only for internal use
         
-    @action(detail=False,methods=['post'])
-    def increasequantity(self,request,*args,**kwargs):
-        # increasing quantity of cart item
-        cartItem = CartItem.objects.get(pk=request.data['cartItem'])
-        if cartItem.cart.user.pk != request.user.pk:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-        
-        cartItem.increase_quantity(request.data['quantity'] if 'quantity' in request.data else 1)
-        
-        return Response(status=status.HTTP_200_OK,data=CartItemListSerializer(cartItem).data)
-    
     @action(detail=False,methods=['post'])
     def decreasequantity(self,request,*args,**kwargs):
         # decreasing quantity of cart item
         cartItem = CartItem.objects.get(pk=request.data['cartItem'])
+        product = Product.objects.get(pk=cartItem.product.pk)
         if cartItem.cart.user.pk != request.user.pk:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        
-        cartItem.decrease_quantity(request.data['quantity'] if 'quantity' in request.data else 1)
-        if cartItem.id == None:
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        quantity = request.data['quantity'] if 'quantity' in request.data else 1 
+        cartItem.quantity  = min(0,cartItem.quantity - quantity)
+        if cartItem.quantity == 0:
+            cartItem.delete()
+            return Response(status=status.HTTP_200_OK,)
+
+        cartItem.save()
+        product.decrease_stock_by(cartItem.quantity)
+
         return Response(status=status.HTTP_200_OK,data=CartItemListSerializer(cartItem).data)
     
     @action(detail=False,methods=['delete']) 
     def removefromcart(self,request,*args,**kwargs):
         # removing cart item from cart
         cartItem = CartItem.objects.get(pk=request.data['cartItem'])
+        product = cartItem.product
         if cartItem.cart.user.pk != request.user.pk:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        
+        product.stock += cartItem.quantity 
+        product.save()        
         cartItem.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     

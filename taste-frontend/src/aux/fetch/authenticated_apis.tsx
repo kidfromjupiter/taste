@@ -10,6 +10,12 @@ export async function getCart() {
     });
     return response.data;
 }
+export async function getCartValue() {
+    const response = await axiosInstance.get(`/cart/`, {
+        withCredentials: true,
+    });
+    return response.data;
+}
 
 export async function addToCart(productId: string, quantity: number = 1) {
     const response = await axiosInstance.post(`/cart/addtocart/`, { product: productId, quantity: quantity }, {

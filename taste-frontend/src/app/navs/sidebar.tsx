@@ -63,7 +63,7 @@ export default function SideBar() {
 			<div
 				className={`${
 					sidebarOpen ? "translate-x-0" : "-translate-x-60"
-				}  transition-all md:translate-x-0  absolute px-3 py-5 md:relative md:flex flex-col justify-between h-screen  border-r-[1px] border-neutral-100 dark:border-neutral-700 z-50 dark:bg-neutral-900 bg-neutral-50`}
+				}  transition-all md:translate-x-0 absolute px-3 py-5 md:relative md:flex flex-col justify-between h-screen  border-r-[1px] border-neutral-100 dark:border-neutral-700 z-50 dark:bg-neutral-900 bg-neutral-50`}
 			>
 				<div className="flex flex-col justify-between h-full">
 					<div className="grid grid-flow-row gap-2">
