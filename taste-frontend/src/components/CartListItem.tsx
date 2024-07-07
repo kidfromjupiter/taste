@@ -17,7 +17,7 @@ const CartItemListComponent = ({
     const [blobStyles, _, __, ref] = useBorderRadiusBlob();
     const [_quantity, setquantity] = useState(quantity)
 
-    const quantityTimer = useRef(null)
+    const quantityTimer = useRef<null|NodeJS.Timeout>(null)
     const _increaseQuantity = async () =>{
       setquantity(_quantity +1)
       if (quantityTimer.current) {
