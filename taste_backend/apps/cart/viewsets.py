@@ -36,15 +36,18 @@ class CartViewSet(viewsets.ModelViewSet):
 
             if cartItem.is_valid():
                 try:
-                    item = cartItem.save()
-                    productInDB.decrease_stock_by(item.quantity)
-                    return Response(status=status.HTTP_200_OK,data=cartItem.data)
-                except:
+                    instance = cartItem.save()
+                    
+                    return Response(status=status.HTTP_200_OK,data={'id':instance.id,**cartItem.data})
+                except Exception as e:
+                    print("e0:",e)
                     return Response(status=status.HTTP_400_BAD_REQUEST)
             else:
+                print("e1:",cartItem.errors)
                 print('isnt valid')
                 return Response(status=status.HTTP_400_BAD_REQUEST,data=cartItem.errors)
-        except:
+        except Exception as e:
+            print("e2:",e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
             
         

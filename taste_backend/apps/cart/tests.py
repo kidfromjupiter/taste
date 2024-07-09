@@ -69,9 +69,11 @@ class CartTestCase(APITestCase,TestCase):
     def test_addtocart_to_same_product(self):
         response = self.client.post(f'/api/cart/addtocart/',{'product':self.product.pk,'quantity':1},format='json')
         self.assertEqual(response.status_code,200)
+        self.assertEqual(response.data['quantity'],1)
         self.assertEqual(Product.objects.get(pk=self.product.pk).stock,self.product.stock - 1)
         response = self.client.post(f'/api/cart/addtocart/',{'product':self.product.pk,'quantity':1},format='json')
         self.assertEqual(response.status_code,200)
+        self.assertEqual(response.data['quantity'],1)
         self.assertEqual(Product.objects.get(pk=self.product.pk).stock,self.product.stock - 1)
 
     def test_addtocart_with_same_product_decrease_product_stock(self):
@@ -98,6 +100,7 @@ class CartTestCase(APITestCase,TestCase):
         self.assertEqual(cartResponse.status_code,200)
         self.assertEqual(Product.objects.get(pk=self.product2.pk).stock,self.product2.stock - 20)
         self.assertEqual(cartResponse.data['quantity'],20)
+        print(cartResponse.data)
 
         #removing from cart
         response = self.client.delete(f'/api/cart/removefromcart/',{'cartItem':cartResponse.data['id']},format='json')
