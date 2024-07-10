@@ -25,8 +25,11 @@ export async function addToCart(productId: string, quantity: number = 1) {
 }
 
 export async function removeFromCart(cartItemId: number) {
-    const response = await axiosInstance.post(`/cart/removefromcart/`, { cartItem: cartItemId }, {
+    const response = await axiosInstance.delete(`/cart/removefromcart/`, {
         withCredentials: true,
+        data:{
+           cartItem: cartItemId
+        }
     });
     return response.data;
 }

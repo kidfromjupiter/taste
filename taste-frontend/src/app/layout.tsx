@@ -41,7 +41,7 @@ export default function Layout({
 				<Provider store={store}>
 					<div className="grid grid-flow-row md:grid-cols-[200px_auto] min-h-screen h-screen">
 						<SideBar />
-						<div className="flex xl:px-24  justify-center px-5 overflow-y-auto">
+						<div className="flex   justify-center  overflow-y-auto">
 							<AnimatePresence mode="wait" initial={false}>
 								<div className="mt-16 md:mt-0 flex w-full">{children}</div>
 							</AnimatePresence>

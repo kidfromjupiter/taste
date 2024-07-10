@@ -4,19 +4,22 @@ import SpringContainer from "./SpringSquare";
 import useBorderRadiusBlob from "./hooks/useBorderRadiusBlob";
 import { CartItemListComponentProps, ListProduct } from "@/app/types";
 import { m } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const CartItemListComponent = ({
+    id,
     removeItem,
     product,
-    id, //cart item id
     quantity,
-    addToCart,
-    decreaseQuantity,
+    addToCart ,
 }: CartItemListComponentProps) => {
     const [blobStyles, _, __, ref] = useBorderRadiusBlob();
     const [_quantity, setquantity] = useState(quantity)
+    const [removing, setremoving] = useState(false)
 
+    useEffect(()=>{
+      setquantity(quantity)
+    },[quantity])
     const quantityTimer = useRef<null|NodeJS.Timeout>(null)
     const _increaseQuantity = async () =>{
       setquantity(_quantity +1)
@@ -24,7 +27,7 @@ const CartItemListComponent = ({
         clearTimeout(quantityTimer.current)
       }
       quantityTimer.current = setTimeout(() => {
-         addToCart?.(); 
+         addToCart?.(_quantity); 
       }, 200);
 
 
@@ -35,7 +38,7 @@ const CartItemListComponent = ({
         clearTimeout(quantityTimer.current)
       }
       quantityTimer.current = setTimeout(() => {
-         addToCart?.(); 
+         addToCart?.(_quantity); 
       }, 200);
 
 
@@ -61,7 +64,7 @@ const CartItemListComponent = ({
                     {removeItem && (
                         <div
                             className="absolute top-0 right-0"
-                            onClick={() => removeItem(product.id)}
+                            onClick={() => removeItem(id)}
                         >
                             <AiOutlineDelete size={30} />
                         </div>

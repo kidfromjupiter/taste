@@ -35,8 +35,8 @@ export interface ListProduct extends Product {
 }
 
 export interface CartItemListComponentProps extends CartItem {
-    removeItem?: (productId: string) => void;
+    removeItem?: (cartItemId:number) => void;
     simplified?: boolean;
-    addToCart?: () => void;
+    addToCart?: (arg0:number) => void;
     decreaseQuantity?: () => void;
 }

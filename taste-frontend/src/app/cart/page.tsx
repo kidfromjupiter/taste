@@ -18,7 +18,7 @@ import { CartItem, Product } from "../types";
 type Props = {};
 
 const Cart = (props: Props) => {
-	const translate = useMotionValue(0);
+	const height = useMotionValue(15);
 	const rotate = useMotionValue(0);
 	const ref = useRef<HTMLDivElement>(null);
 	const isInView = useInView(ref);
@@ -26,24 +26,24 @@ const Cart = (props: Props) => {
   const [cartValue,setCartValue] = useState<number>(0);
 	useEffect(() => {
 		if (isInView) {
-			translate.set(200);
+			height.set(240);
 			rotate.set(180);
 		} else {
-			translate.set(0);
+			height.set(40);
 			rotate.set(0);
 		}
 	}, [isInView]);
 
 	const translate_rotate = () => {
-		if (translate.get() == 0) {
-			translate.set(200);
+		if (rotate.get() == 0) {
+			height.set(240);
 			rotate.set(180);
 		} else {
-			translate.set(0);
+			height.set(40);
 			rotate.set(0);
 		}
 	};
-	const translateStyle = useSpring(translate, {
+	const heightStyle = useSpring(height, {
 		stiffness: 150,
 		damping: 20,
 	});
@@ -51,12 +51,9 @@ const Cart = (props: Props) => {
 	useEffect(() => {
 		// startBlob();
 		getCart().then((data) => {
-      console.log(data);
-      
 			setItemList(data.cartitems);
       setCartValue(data.value)
 		});
-
 
 	}, []);
 	const updateItemlist = (item: CartItem) => {
@@ -67,18 +64,25 @@ const Cart = (props: Props) => {
 			return newItems;
 		});
 	}
+  const removeItemFromList = (itemId:number) =>{
+    setItemList((prev)=>{
+			const index = prev.findIndex((p) => p.id == itemId);
+      const newItems = [...prev]
+      newItems.splice(index,1)
+      return newItems
+    })
+  }
 	return (
 		<FramerWrapper>
-      <div id='container' className="block w-full md:grid grid-flow-col h-screen">
-			  <div className="w-full px-3  h-full overflow-auto mb-10 ">
+      <div id='container' className="block w-full md:grid grid-flow-col md:h-screen">
+			  <div className="w-full px-3  h-full md:overflow-auto ">
 			  	{itemList?.map((p: CartItem, i: number) => {
 			  		if (i == 9) {
 			  			return (
 			  				<div key={p.id} ref={ref}>
 			  					<CartItemListComponent
-			  						addToCart={() => addToCart(p.product.id).then(res => { updateItemlist(res) })}
-			  						decreaseQuantity={() => decreaseQuantity(p.id).then(res => { updateItemlist(res) })}
-			  						removeItem={() => console.log("remove item")}
+			  						addToCart={(quantity:number) => addToCart(p.product.id,quantity).then(res => { updateItemlist(res) })}
+                    removeItem={(itemId:number) => removeFromCart(itemId).then(()=> removeItemFromList(itemId))}
 			  						{...p}
 
 			  					/>
@@ -87,10 +91,9 @@ const Cart = (props: Props) => {
 			  		}
 			  		return (
 			  			<CartItemListComponent
-			  				addToCart={() => addToCart(p.product.id).then(res => { updateItemlist(res) })}
-			  				decreaseQuantity={() => decreaseQuantity(p.id).then(res => { updateItemlist(res) })}
+			  				addToCart={(quantity:number) => addToCart(p.product.id,quantity).then(res => { updateItemlist(res) })}
 			  				key={p.id}
-			  				removeItem={() => console.log("remove item")}
+			  				removeItem={(itemId:number) => removeFromCart(itemId).then(()=> removeItemFromList(itemId))}
 			  				{...p}
 			  			/>
 			  		);
@@ -134,8 +137,8 @@ const Cart = (props: Props) => {
       
       {/*this is the checkout div on mobile devices*/}
 			<motion.div
-				className="right-0 fixed w-full h-60 bg-white shadow-top bottom-0 z-30 dark:bg-zinc-800 block md:hidden"
-				style={{ translateY: translateStyle }}
+				className="right-0 sticky w-full overflow-hidden bg-white shadow-top bottom-0 z-30 dark:bg-zinc-800 block md:hidden"
+				style={{ height: heightStyle }}
 			>
 				<div
 					className="flex justify-center items-center text-slate-500 pt-2"

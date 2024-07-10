@@ -24,7 +24,7 @@ const SearchBar = ({
 	}));
 
 	return (
-		<animated.div className="" style={styles}>
+		<animated.div className="w-full" style={styles}>
 			<input
 				value={text}
 				onChange={(e) => {

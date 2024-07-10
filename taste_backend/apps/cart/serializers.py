@@ -12,7 +12,7 @@ class CartSerializer(serializers.ModelSerializer):
         depth = 2
 
 class CartItemSerializer(serializers.ModelSerializer):
-    product = serializers.UUIDField()
+    product = serializers.UUIDField(format='hex_verbose')
     id = serializers.IntegerField(read_only=True)
     class Meta:
         model = CartItem
@@ -20,16 +20,19 @@ class CartItemSerializer(serializers.ModelSerializer):
     def validate_product(self,value):
         #dont raise error if product exists
         try:
-            return Product.objects.get(id=value)
+            return Product.objects.get(id=value).id
         except Exception as e:
+            print("e6:",'product validation error')
             return ValidationError(f'{e}')
     def create(self,validated_data):
+        product = Product.objects.get(id=validated_data.get("product",None))
         try:
-            item = CartItem.objects.get(cart=validated_data.get('cart',None),product=validated_data.get("product",None))
+            item = CartItem.objects.get(cart=validated_data.get('cart',None),product=product)
+            print('got item')
             prev_quantity = item.quantity
             if prev_quantity != validated_data.get('quantity',None):
                 item.quantity = validated_data.get("quantity",None)
-                product = Product.objects.get(id=item.product)
+                print('got product')
                 if prev_quantity > item.quantity :
                     #stock should be increased. quantity was decreased
                     product.increase_stock_by(prev_quantity - item.quantity)
@@ -39,13 +42,11 @@ class CartItemSerializer(serializers.ModelSerializer):
                 item.save()
             return item
         except ObjectDoesNotExist:
-            product = validated_data.get("product",None)
             product.decrease_stock_by(validated_data.get('quantity',None))
-            return CartItem.objects.create(cart=validated_data.get('cart',None),product=validated_data.get("product",None),quantity=validated_data.get('quantity',None))
+            return CartItem.objects.create(cart=validated_data.get('cart',None),product=product,quantity=validated_data.get('quantity',None))
         except Exception as e:
             print("e4:",e)
         
-
 
     def save(self,**kwargs):
         return self.create(self.validated_data)

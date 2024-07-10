@@ -17,7 +17,7 @@ export default function Page() {
 
 	return (
 		<FramerWrapper>
-			<div className="flex flex-col px-3 dark:bg-neutral-900 h-screen">
+			<div className="px-8 xl:px-24 flex flex-col dark:bg-neutral-900 h-screen">
 				<div className="py-3 md:py-10 ">
 					<SearchBar
 						className="dark:bg-zinc-800 dark:text-white"

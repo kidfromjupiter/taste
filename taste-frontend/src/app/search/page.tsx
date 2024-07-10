@@ -12,7 +12,6 @@ import {
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import ListProduct from "@/components/ListProduct";
 import SpringContainer from "@/components/SpringSquare";
-import useBorderRadiusBlob from "@/components/hooks/useBorderRadiusBlob";
 import { useRouter, useSearchParams } from "next/navigation";
 import { searchProducts } from "@/aux/fetch/apis";
 type Props = {};
@@ -60,7 +59,7 @@ const SearchPage = (props: Props) => {
 
 	return (
 		<FramerWrapper>
-			<div className="h-screen  flex flex-col dark:bg-neutral-900">
+			<div className="px-5 xl:px-24 h-screen  flex flex-col dark:bg-neutral-900">
 				<div
 					className="z-20 flex w-full px-3 bg-white  flex-col items-start mb-3 dark:bg-neutral-900"
 					ref={ref}

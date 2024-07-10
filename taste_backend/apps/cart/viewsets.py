@@ -3,6 +3,7 @@ from rest_framework import viewsets,status
 from rest_framework.response import Response
 
 from apps.products.models import Product
+from apps.products.serializers import ProductSerializer
 from .serializers import CartSerializer,CartItemSerializer,CartItemListSerializer
 from rest_framework.decorators import action
 from apps.custom_auth.models import User
@@ -37,8 +38,10 @@ class CartViewSet(viewsets.ModelViewSet):
             if cartItem.is_valid():
                 try:
                     instance = cartItem.save()
-                    
-                    return Response(status=status.HTTP_200_OK,data={'id':instance.id,**cartItem.data})
+                    response_data = cartItem.data
+                    response_data['product']= ProductSerializer(instance=Product.objects.get(id=cartItem.data['product'])).data
+                    response_data['id'] = instance.id
+                    return Response(status=status.HTTP_200_OK,data=response_data)
                 except Exception as e:
                     print("e0:",e)
                     return Response(status=status.HTTP_400_BAD_REQUEST)
